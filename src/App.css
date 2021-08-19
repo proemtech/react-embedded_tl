@@ -1,10 +1,15 @@
-.App {
+body {
   background-color: #282c34;
+}
+
+.App {
+  margin: 0 auto;
+  max-width: 800px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: calc(10px + 1vmin);
   color: white;
 }
@@ -14,5 +19,7 @@
 }
 
 .trainMessageCard {
-  padding: 20px 10px;
+  background-color: #4B4D52;
+  margin: 10px 0px;
+  padding: 10px;
 }
