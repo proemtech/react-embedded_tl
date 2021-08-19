@@ -1,7 +1,8 @@
+import "./App.css";
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
-import "./App.css";
-import { fetchTrainMessages } from "./services/fetchTrainMessages";
+import { trainMessageQuery } from "./services/queries/trainMessageQuery";
+import { fetchJsonResponse } from "./services/fetchJsonResponse";
 
 export default function App() {
   return (
@@ -71,7 +72,7 @@ function TrainMessagePage() {
   
   useEffect(() => {
     async function getMessages() {
-      const result = await fetchTrainMessages(locationId);
+      const result = await fetchJsonResponse(trainMessageQuery(locationId));
       setMessages(result);
     }
     getMessages();
