@@ -1,4 +1,4 @@
-# Embedded traffic information for Swedish trains and train stations
+# Kiosk mode traffic information for Swedish trains and train stations
 _Information will follow in Swedish for the rest of this README_
 
 Detta är en lekstuga med React för att bygga en trafikinformationstjänst för järnväg anpassad för visning i olika former av statiska skärmar. Navigation och anpassning av sker via URL, för att enkelt kunna visas i kioskklienter.
