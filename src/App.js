@@ -1,8 +1,9 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
-import { trainMessageQuery } from "./services/queries/trainMessageQuery";
-import { fetchJsonResponse } from "./services/fetchJsonResponse";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Error404 from "./pages/Error404";
+import StationPage from "./pages/StationPage";
+import TrainMessagePage from "./pages/TrainMessagePage";
+import TrainPage from "./pages/TrainPage";
 
 export default function App() {
   return (
@@ -10,7 +11,7 @@ export default function App() {
       <Router>
         <Switch>
           <Route exact path="/">
-            <></>
+            <Error404 />
           </Route>
           <Route exact path="/train/:trainIdent/:searchDate?">
             <TrainPage />
@@ -27,72 +28,5 @@ export default function App() {
         </Switch>
       </Router>
     </div>
-  );
-}
-
-function StationPage() {
-  const { locationId, type } = useParams();
-
-  return (
-    <div>
-      <p>
-        Location ID: {locationId}
-        {type && (
-          <>
-            <br />
-            Type: {type}
-          </>
-        )}
-      </p>
-    </div>
-  );
-}
-
-function TrainPage() {
-  const { trainIdent, searchDate } = useParams();
-  return (
-    <div>
-      <p>
-        Train ident: {trainIdent}
-        {searchDate && (
-          <>
-            <br />
-            Search date: {searchDate}
-          </>
-        )}
-      </p>
-    </div>
-  );
-}
-
-function TrainMessagePage() {
-  const { locationId } = useParams();
-  const [messages, setMessages] = useState({});
-
-  
-  useEffect(() => {
-    async function getMessages() {
-      const result = await fetchJsonResponse(trainMessageQuery(locationId));
-      setMessages(result);
-    }
-    getMessages();
-  }, [locationId]);
-
-  console.log(messages);
-
-  return (
-    <>
-      <h4>Visar trafikstörningsmeddelanden för {locationId}</h4>
-      {messages && (
-        <>
-          {messages.TrainMessage?.map((msg) => (
-            <div className="trainMessageCard">
-              <h4 key={Math.random()}>{msg.Header}</h4>
-              <p>{msg.ExternalDescription}</p>
-            </div>
-          ))}
-        </>
-      )}
-    </>
   );
 }

@@ -4,7 +4,6 @@ body {
 
 .App {
   margin: 0 auto;
-  max-width: 800px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -22,4 +21,14 @@ body {
   background-color: #4B4D52;
   margin: 10px 0px;
   padding: 10px;
+}
+
+.errorpage {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.error404 {
+  font-size: calc(300px + 1vmin);
 }

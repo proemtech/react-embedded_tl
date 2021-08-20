@@ -1,11 +1,12 @@
-export const stationQuery = locationId => `
+export const stationQuery = (locationId, activityType) => `
 <REQUEST>
           <LOGIN authenticationkey="${process.env.REACT_APP_TRV_APIKEY}" />
-          <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="AdvertisedTimeAtLocation" limit="20">
+          <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="AdvertisedTimeAtLocation" limit="25">
             <FILTER>
             <AND>
             <EQ name="ActivityType" value="${activityType}" />
             <EQ name="LocationSignature" value="${locationId}" />
+            <EQ name="Advertised" value="true" />
               <OR>
                 <AND>
                   <GT name="AdvertisedTimeAtLocation" value="$dateadd(-00:15:00)" />
