@@ -28,7 +28,7 @@ export default function StationTable(props) {
                 <td>{getShortTime(row.AdvertisedTimeAtLocation)}</td>
                 <td>{row.TrackAtLocation}</td>
                 <td></td>
-                <td></td>
+                <td>{row.Canceled ? "Inställt" : ""}</td>
               </tr>
             ))}
           </tbody>

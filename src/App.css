@@ -1,5 +1,11 @@
 body {
-  background-color: #282c34;
+  background-color: #222222;
+  font-size: calc(10px + 1vmin);
+  color: white;
+}
+
+a {
+  color: #61dafb;
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -28,22 +34,16 @@ tr {
   margin: 0px;
 }
 
-tr:nth-child(odd) {
-  background: #444;
-}
-
-tr:nth-child(even) {
+thead > tr {
   background: #333;
 }
 
-.App {
-  min-height: 100vh;
-  font-size: calc(10px + 1vmin);
-  color: white;
+tbody > tr:nth-child(odd) {
+  background: #444;
 }
 
-.App-link {
-  color: #61dafb;
+tbody > tr:nth-child(even) {
+  background: #333;
 }
 
 .content {
