@@ -15,8 +15,6 @@ export default function StationPage() {
   const [locationName, setLocationName] = useState(null);
   let currentTime = new Date();
 
-  setInterval(() => currentTime = new Date(), 1000);
-
   useEffect(() => {
     let interval;
 
@@ -117,16 +115,11 @@ export default function StationPage() {
     document.title = `Ankomster & avgångar ${locationId}`;
     return (
       <div>
-        <div class="content">
-          <div className="half">
             {locationName ? (
               <h2 className="locationId">{locationName}</h2>
             ) : (
               <h2 className="locationId">{locationId}</h2>
             )}
-          </div>
-          <div className="half">{currentTime}</div>
-        </div>
         {arrivalsData !== null && departuresData !== null ? (
           <div className="content">
             <div className="half">
