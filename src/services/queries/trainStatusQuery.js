@@ -1,4 +1,4 @@
-export const trainStateQuery = (trainIdent, searchDate) => `
+export const trainStatusQuery = (trainIdent, searchDate) => `
     <REQUEST>
       <LOGIN authenticationkey="${process.env.REACT_APP_TRV_APIKEY}" />
       <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="TimeAtLocation desc, ActivityType desc" limit="1">

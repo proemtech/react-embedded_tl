@@ -1,7 +1,7 @@
 export const stationQuery = (locationId, activityType) => `
   <REQUEST>
     <LOGIN authenticationkey="${process.env.REACT_APP_TRV_APIKEY}" />
-    <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="AdvertisedTimeAtLocation" limit="20">
+    <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="AdvertisedTimeAtLocation" limit="25">
       <FILTER>
       <AND>
       <EQ name="ActivityType" value="${activityType}" />
@@ -10,7 +10,6 @@ export const stationQuery = (locationId, activityType) => `
         <OR>
           <AND>
             <GT name="AdvertisedTimeAtLocation" value="$dateadd(-00:15:00)" />
-            <LT name="AdvertisedTimeAtLocation" value="$dateadd(14:00:00)" />
           </AND>
           <AND>
             <LT name="AdvertisedTimeAtLocation" value="$dateadd(00:30:00)" />
