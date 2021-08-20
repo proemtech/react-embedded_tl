@@ -13,18 +13,23 @@ export default function StationPage() {
   const [arrivalsData, setArrivalsData] = useState(null);
   const [departuresData, setDeparturesData] = useState(null);
   const [locationName, setLocationName] = useState(null);
+  let currentTime = new Date();
+
+  setInterval(() => currentTime = new Date(), 1000);
 
   useEffect(() => {
     let interval;
 
     async function getTrainState(trainIdent, searchDate) {
       if (searchDate !== undefined) {
-        const trainState = await fetchJsonResponse(trainStatusQuery(trainIdent,getDateFormat(searchDate)));
+        const trainState = await fetchJsonResponse(
+          trainStatusQuery(trainIdent, getDateFormat(searchDate))
+        );
         if (trainState.TrainAnnouncement[0]?.TimeAtLocation) {
           return calcTrainStatus(trainState.TrainAnnouncement[0]);
         }
       }
-      return {}
+      return {};
     }
 
     async function getStationData(type) {
@@ -33,20 +38,34 @@ export default function StationPage() {
       setLocationName(stationName.TrainStation[0]?.OfficialLocationName);
 
       if (type === undefined || type === "arrivals") {
-        const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst"));
-        const arrivals = await Promise.all(response.TrainAnnouncement?.map(async (item) => {
-          item.TrainStatus = await getTrainState(item.TechnicalTrainIdent,item.ScheduledDepartureDateTime);
-          return item;
-        }));
+        const response = await fetchJsonResponse(
+          stationQuery(locationId, "Ankomst")
+        );
+        const arrivals = await Promise.all(
+          response.TrainAnnouncement?.map(async (item) => {
+            item.TrainStatus = await getTrainState(
+              item.TechnicalTrainIdent,
+              item.ScheduledDepartureDateTime
+            );
+            return item;
+          })
+        );
 
         setArrivalsData(arrivals);
       }
       if (type === undefined || type === "departures") {
-        const response = await fetchJsonResponse(stationQuery(locationId, "Avgang"));
-        const departures = await Promise.all(response.TrainAnnouncement?.map(async (item) => {
-          item.TrainStatus = await getTrainState(item.TechnicalTrainIdent,item.ScheduledDepartureDateTime);
-          return item;
-        }));
+        const response = await fetchJsonResponse(
+          stationQuery(locationId, "Avgang")
+        );
+        const departures = await Promise.all(
+          response.TrainAnnouncement?.map(async (item) => {
+            item.TrainStatus = await getTrainState(
+              item.TechnicalTrainIdent,
+              item.ScheduledDepartureDateTime
+            );
+            return item;
+          })
+        );
         setDeparturesData(departures);
       }
     }
@@ -62,34 +81,67 @@ export default function StationPage() {
   }, [locationId, type]);
 
   if (type === "arrivals") {
-    document.title = `Ankomster ${locationId}`
+    document.title = `Ankomster ${locationId}`;
     return (
       <div>
-        {locationName ? <h2 className="locationId">{locationName}</h2> : <h2 className="locationId">{locationId}</h2>}
-        {arrivalsData !== null ? <StationBoard data={arrivalsData} type="arrivals" /> : <></>}
+        {locationName ? (
+          <h2 className="locationId">{locationName}</h2>
+        ) : (
+          <h2 className="locationId">{locationId}</h2>
+        )}
+        {arrivalsData !== null ? (
+          <StationBoard data={arrivalsData} type="arrivals" />
+        ) : (
+          <></>
+        )}
       </div>
     );
   }
   if (type === "departures") {
-    document.title = `Avgångar ${locationId}`
+    document.title = `Avgångar ${locationId}`;
     return (
       <div>
-        {locationName ? <h2 className="locationId">{locationName}</h2> : <h2 className="locationId">{locationId}</h2>}
-        {departuresData !== null ? <StationBoard data={departuresData} type="departures" /> : <></>}
+        {locationName ? (
+          <h2 className="locationId">{locationName}</h2>
+        ) : (
+          <h2 className="locationId">{locationId}</h2>
+        )}
+        {departuresData !== null ? (
+          <StationBoard data={departuresData} type="departures" />
+        ) : (
+          <></>
+        )}
       </div>
     );
   } else {
-    document.title = `Ankomster & avgångar ${locationId}`
+    document.title = `Ankomster & avgångar ${locationId}`;
     return (
       <div>
-        {locationName ? <h2 className="locationId">{locationName}</h2> : <h2 className="locationId">{locationId}</h2>}
+        <div class="content">
+          <div className="half">
+            {locationName ? (
+              <h2 className="locationId">{locationName}</h2>
+            ) : (
+              <h2 className="locationId">{locationId}</h2>
+            )}
+          </div>
+          <div className="half">{currentTime}</div>
+        </div>
         {arrivalsData !== null && departuresData !== null ? (
           <div className="content">
             <div className="half">
-              {arrivalsData !== null ? <StationBoard data={arrivalsData} type="arrivals" /> : <></>}
+              {arrivalsData !== null ? (
+                <StationBoard data={arrivalsData} type="arrivals" />
+              ) : (
+                <></>
+              )}
             </div>
             <div className="half">
-              {departuresData !== null ? <StationBoard data={departuresData} type="departures" /> : <></>}
+              {departuresData !== null ? (
+                <StationBoard data={departuresData} type="departures" />
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         ) : (
