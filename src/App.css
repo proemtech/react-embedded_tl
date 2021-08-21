@@ -74,10 +74,17 @@ tbody > tr:nth-child(even) {
   text-transform: uppercase;
 }
 
+.currentTime {
+  font-family: monospace;
+  font-size: 18pt;
+  margin: 10px 10px;
+  text-align: right;
+}
+
 .locationId {
   color: #f1f1f1;
-  margin: 10px 0px;
-  text-align: center;
+  margin: 10px 10px;
+  text-align: left;
 }
 
 

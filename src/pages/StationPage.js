@@ -7,6 +7,8 @@ import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { stationQuery } from "../services/queries/stationQuery";
 import { stationNameQuery } from "../services/queries/stationNameQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
+import Clock from "../components/Clock";
+import LocationNameTitle from "../components/LocationNameTitle";
 
 export default function StationPage() {
   const { locationId, type } = useParams();
@@ -69,7 +71,14 @@ export default function StationPage() {
     document.title = `Ankomster ${locationId}`;
     return (
       <div>
-        {locationName ? <h2 className="locationId">{locationName}</h2> : <h2 className="locationId">{locationId}</h2>}
+        <div className="content">
+          <div className="half">
+            <LocationNameTitle locationId={locationId} locationName={locationName} />
+          </div>
+          <div className="half">
+            <Clock />
+          </div>
+        </div>
         {arrivalsData !== null ? <StationBoard data={arrivalsData} type="arrivals" /> : <></>}
       </div>
     );
@@ -78,7 +87,14 @@ export default function StationPage() {
     document.title = `Avgångar ${locationId}`;
     return (
       <div>
-        {locationName ? <h2 className="locationId">{locationName}</h2> : <h2 className="locationId">{locationId}</h2>}
+        <div className="content">
+          <div className="half">
+            <LocationNameTitle locationId={locationId} locationName={locationName} />
+          </div>
+          <div className="half">
+            <Clock />
+          </div>
+        </div>
         {departuresData !== null ? <StationBoard data={departuresData} type="departures" /> : <></>}
       </div>
     );
@@ -86,7 +102,14 @@ export default function StationPage() {
     document.title = `Ankomster & avgångar ${locationId}`;
     return (
       <div>
-        {locationName ? <h2 className="locationId">{locationName}</h2> : <h2 className="locationId">{locationId}</h2>}
+        <div className="content">
+          <div className="half">
+            <LocationNameTitle locationId={locationId} locationName={locationName} />
+          </div>
+          <div className="half">
+            <Clock />
+          </div>
+        </div>
         {arrivalsData !== null && departuresData !== null ? (
           <div className="content">
             <div className="half">
