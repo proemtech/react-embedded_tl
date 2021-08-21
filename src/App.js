@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Error404 from "./pages/Error404";
+import HomePage from "./pages/HomePage";
 import StationPage from "./pages/StationPage";
 import TrainMessagePage from "./pages/TrainMessagePage";
 import TrainPage from "./pages/TrainPage";
@@ -11,7 +11,7 @@ export default function App() {
       <Router>
         <Switch>
           <Route exact path="/">
-            <Error404 />
+            <HomePage />
           </Route>
           <Route exact path="/train/:trainIdent/:searchDate?">
             <TrainPage />

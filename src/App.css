@@ -1,6 +1,7 @@
 body {
   background-color: #222222;
   color: white;
+  font-family: monospace;
   font-size: calc(10px + 1vmin);
 }
 
@@ -60,7 +61,7 @@ tbody > tr:nth-child(even) {
 }
 
 .error404 {
-  font-size: calc(300px + 1vmin);
+  font-size: calc(100px + 1vmin);
 }
 
 .half {
@@ -74,8 +75,7 @@ tbody > tr:nth-child(even) {
 }
 
 .currentTime {
-  font-family: monospace;
-  font-size: 18pt;
+  font-size: calc(18px + 1vmin);
   margin: 10px 10px;
   text-align: right;
 }
