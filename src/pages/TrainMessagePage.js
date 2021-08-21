@@ -23,9 +23,9 @@ export default function TrainMessagePage() {
   return (
     <>
       {locationName ? (
-        <h4 className="locationId">Visar trafikstörningsmeddelanden vid {locationName}</h4>
+        <h2 className="locationId">Visar trafikstörningsmeddelanden vid {locationName}</h2>
       ) : (
-        <h4 className="locationId">Visar trafikstörningsmeddelanden för {locationId}</h4>
+        <h2 className="locationId">Visar trafikstörningsmeddelanden för {locationId}</h2>
       )}
       {messages && (
         <>

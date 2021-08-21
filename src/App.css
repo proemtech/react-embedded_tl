@@ -87,7 +87,7 @@ tbody > tr:nth-child(even) {
 }
 
 .trainMessageCard {
-  background-color: #4B4D52;
+  background-color: #333;
   margin: 10px;
   padding: 10px;
 }
