@@ -2,7 +2,6 @@ body {
   background-color: #222222;
   color: white;
   font-size: calc(10px + 1vmin);
-  overflow: hidden;
 }
 
 a {
