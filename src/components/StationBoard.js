@@ -1,5 +1,6 @@
 import React from "react";
-import { getShortTime } from "../utils/common";
+import { Link } from "react-router-dom";
+import { getDateFormat, getShortTime } from "../utils/common";
 
 export default function StationBoard({ data, type }) {
   if (data !== null) {
@@ -20,9 +21,9 @@ export default function StationBoard({ data, type }) {
           <tbody>
             {data?.map((row) => (
               <tr key={Math.random()}>
-                <td>{row.AdvertisedTrainIdent}</td>
-                <td>{row.FromLocation[0]?.LocationName}</td>
-                <td>{row.ToLocation[0]?.LocationName}</td>
+                <td><Link to={`/train/${row.AdvertisedTrainIdent}/${getDateFormat(row.ScheduledDepartureDateTime)}`}>{row.AdvertisedTrainIdent}</Link></td>
+                <td><Link to={`/station/${row.FromLocation[0]?.LocationName}`}>{row.FromLocation[0]?.LocationName}</Link></td>
+                <td><Link to={`/station/${row.ToLocation[0]?.LocationName}`}>{row.ToLocation[0]?.LocationName}</Link></td>
                 <td>{getShortTime(row.AdvertisedTimeAtLocation)}</td>
                 <td>{row.TrackAtLocation}</td>
                 <td>

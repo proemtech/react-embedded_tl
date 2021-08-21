@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { getShortTime } from "../utils/common";
 
 export default function TrainScheduleTable({ trainSchedule }) {
@@ -16,7 +17,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
         <tbody>
           {trainSchedule?.map((row) => (
             <tr key={Math.random()}>
-              <td>{row.LocationSignature}</td>
+              <td><Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link></td>
               <td>
                 {row.DepartureData?.TrackAtLocation && row.DepartureData?.TrackAtLocation !== "x"
                   ? row.DepartureData?.TrackAtLocation
