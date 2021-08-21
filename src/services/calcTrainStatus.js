@@ -1,8 +1,9 @@
 export function calcTrainStatus(trainAnnouncement) {
+  if (trainAnnouncement !== undefined) {
     const actual = new Date(trainAnnouncement.TimeAtLocation);
     let advertised;
     let prefix = "";
-  
+
     if (
       trainAnnouncement.TechnicalTimeAtLocation !== null ||
       trainAnnouncement.AdvertisedTimeAtLocation !== trainAnnouncement.TechnicalTimeAtLocation
@@ -13,7 +14,7 @@ export function calcTrainStatus(trainAnnouncement) {
     }
     let minutes = Math.floor((actual - advertised) / 1000 / 60);
     let textColor;
-  
+
     if (minutes > 0 && minutes < 5) {
       textColor = "orange";
     } else if (minutes >= 5) {
@@ -23,11 +24,11 @@ export function calcTrainStatus(trainAnnouncement) {
     } else {
       textColor = "green";
     }
-  
+
     if (minutes > 0) {
       prefix = "+";
     }
-  
+
     let output = {
       activity: trainAnnouncement.ActivityType,
       location: trainAnnouncement.LocationSignature,
@@ -36,6 +37,8 @@ export function calcTrainStatus(trainAnnouncement) {
       prefix: prefix,
       textColor: textColor,
     };
-  
+
     return output;
   }
+  return {};
+}

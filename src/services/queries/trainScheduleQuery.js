@@ -9,6 +9,7 @@ export const trainScheduleQuery = (trainIdent, searchDate) => `
               <EQ name="TechnicalTrainIdent" value="${trainIdent}" />
             </OR>
             <EQ name="ScheduledDepartureDateTime" value="${searchDate}" />
+            <EQ name="Advertised" value="true" />
           </AND>
         </FILTER>
       </QUERY>

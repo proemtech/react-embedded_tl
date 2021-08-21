@@ -1,8 +1,7 @@
 import React from "react";
 import { getShortTime } from "../utils/common";
 
-export default function StationBoard(props) {
-  const { data, type } = props;
+export default function StationBoard({ data, type }) {
   if (data !== null) {
     return (
       <div>
