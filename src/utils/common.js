@@ -1,3 +1,9 @@
+export const dateOptions = {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+};
+
 export const fullDateTimeOptions = {
   year: "numeric",
   month: "numeric",
@@ -7,10 +13,10 @@ export const fullDateTimeOptions = {
   second: "numeric",
 };
 
-export const dateOptions = {
-  year: "numeric",
-  month: "numeric",
-  day: "numeric",
+export const fullTimeOptions = {
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
 };
 
 export const timeOptions = {
@@ -18,8 +24,13 @@ export const timeOptions = {
   minute: "numeric",
 };
 
+
 export function getShortTime(dateTimeString) {
   return new Intl.DateTimeFormat("sv-SE", timeOptions).format(new Date(dateTimeString));
+}
+
+export function getLongTime(dateTimeString) {
+  return new Intl.DateTimeFormat("sv-SE", fullTimeOptions).format(new Date(dateTimeString));
 }
 
 export function getDateFormat(dateTimeString) {

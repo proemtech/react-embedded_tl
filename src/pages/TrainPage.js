@@ -8,18 +8,16 @@ import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { trainScheduleQuery } from "../services/queries/trainScheduleQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { scheduleCleaner } from "../services/scheduleCleaner";
-import { getDateFormat } from "../utils/common";
+import { getDateFormat, getLongTime } from "../utils/common";
 
 export default function TrainPage() {
   const { trainIdent, searchDate } = useParams();
   const [trainSchedule, setTrainSchedule] = useState(null);
   const [trainStatus, setTrainStatus] = useState(null);
+  const [trainStatusStreamUrl, setTrainStatusStreamUrl] = useState(null);
 
   useEffect(() => {
-    let interval;
-
     async function getTrainData() {
-      console.log(new Date());
       const trainScheduleResponse = await fetchJsonResponse(
         trainScheduleQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
       );
@@ -28,18 +26,38 @@ export default function TrainPage() {
       );
       setTrainSchedule(scheduleCleaner(trainScheduleResponse));
       setTrainStatus(calcTrainStatus(trainStatusResponse.TrainAnnouncement[0]));
+      
+      if (trainStatusStreamUrl === null) {
+      console.log(`Updated at ${getLongTime(new Date())}`);
+        setTrainStatusStreamUrl(trainStatusResponse?.INFO?.SSEURL);
+      }
     }
 
     getTrainData();
 
-    interval = setInterval(() => {
-      getTrainData();
-    }, 30000);
+    if (trainStatusStreamUrl) {
+      // Set event source
+      var eventSource = new EventSource(trainStatusStreamUrl);
+
+      // Error handling
+      eventSource.onerror = (event) => {
+        console.error(event.error);
+      };
+
+      // Message on stream open
+      eventSource.onopen = () => console.log(`Stream open at ${getLongTime(new Date())}`);
+
+      // Message handler
+      eventSource.onmessage = (event) => {
+        console.log(`Stream ping at ${getLongTime(new Date())}`);
+        getTrainData();
+      };
+    }
 
     return () => {
-      clearInterval(interval);
     };
-  }, [trainIdent, searchDate]);
+  }, [trainIdent, searchDate, trainStatusStreamUrl]);
+
 
   return (
     <div>
@@ -51,7 +69,7 @@ export default function TrainPage() {
           <Clock />
         </div>
       </div>
-      <div className="content">{trainStatus && (<TrainStatus trainStatus={trainStatus} />)}</div>
+      <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
       <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
     </div>
   );

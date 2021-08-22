@@ -2,11 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getDateFormat, getShortTime } from "../utils/common";
 
-export default function StationBoard({ data, type }) {
+export default function StationBoard({ locationId, data, type }) {
   if (data !== null) {
     return (
       <div>
-        {type === "arrivals" ? <h4 className="activityType">Ankomster</h4> : <h4 className="activityType">Avgångar</h4>}
+        {type === "arrivals" ? <h4 className="activityType"><Link to={`/station/${locationId}/arrivals`}>Ankomster</Link></h4> : <h4 className="activityType"><Link to={`/station/${locationId}/departures`}>Avgångar</Link></h4>}
         <table>
           <thead>
             <tr>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import StationBoard from "../components/StationBoard";
-import { getDateFormat } from "../utils/common";
+import { getDateFormat, getLongTime } from "../utils/common";
 import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { stationQuery } from "../services/queries/stationQuery";
@@ -30,7 +30,7 @@ export default function StationPage() {
     }
 
     async function getStationData(type) {
-      console.log(new Date());
+      console.log(`Updated at ${getLongTime(new Date())}`);
       const stationName = await fetchJsonResponse(stationNameQuery(locationId));
       setLocationName(stationName.TrainStation[0]?.OfficialLocationName);
 
@@ -79,7 +79,7 @@ export default function StationPage() {
             <Clock />
           </div>
         </div>
-        {arrivalsData !== null ? <StationBoard data={arrivalsData} type="arrivals" /> : <></>}
+        {arrivalsData !== null ? <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" /> : <></>}
       </div>
     );
   }
@@ -95,7 +95,7 @@ export default function StationPage() {
             <Clock />
           </div>
         </div>
-        {departuresData !== null ? <StationBoard data={departuresData} type="departures" /> : <></>}
+        {departuresData !== null ? <StationBoard locationId={locationId} data={departuresData} type="departures" /> : <></>}
       </div>
     );
   } else {
@@ -113,21 +113,21 @@ export default function StationPage() {
         {arrivalsData !== null && departuresData !== null ? (
           <div className="content">
             <div className="half">
-              {arrivalsData !== null ? <StationBoard data={arrivalsData} type="arrivals" /> : <></>}
+              {arrivalsData !== null ? <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" /> : <></>}
             </div>
             <div className="half">
-              {departuresData !== null ? <StationBoard data={departuresData} type="departures" /> : <></>}
+              {departuresData !== null ? <StationBoard locationId={locationId} data={departuresData} type="departures" /> : <></>}
             </div>
           </div>
         ) : (
           <div className="content">
             {type === "arrivals" && arrivalsData !== null ? (
-              <StationBoard data={arrivalsData} type="arrivals" />
+              <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" />
             ) : (
               <></>
             )}
             {type === "departures" && departuresData !== null ? (
-              <StationBoard data={departuresData} type="departures" />
+              <StationBoard locationId={locationId} data={departuresData} type="departures" />
             ) : (
               <></>
             )}
