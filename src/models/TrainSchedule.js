@@ -4,6 +4,7 @@ export class TrainSchedule {
       this.FromLocation = null;
       this.LocationSignature = null;
       this.ToLocation = null;
+      this.Deviations = null;
       this.ArrivalData = {};
       this.DepartureData = {};
       this.ArrivalState = {};

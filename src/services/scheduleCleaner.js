@@ -6,11 +6,12 @@ export function scheduleCleaner(json) {
   // Initiera variabler och lista över slutprodukt
   let previousLocation;
   let output = [];
-
+  
   // Iterera input och placera i object
   let ts;
   for (let i in data) {
     if (previousLocation !== data[i].LocationSignature) {
+      let deviations = new Set();
       ts = new TrainSchedule();
       ts.AdvertisedTrainIdent = data[i].AdvertisedTrainIdent;
       ts.LocationSignature = data[i].LocationSignature;
@@ -31,8 +32,11 @@ export function scheduleCleaner(json) {
           ts.DepartureState = calcTrainStatus(data[i]);
         }
       }
+      data[i]?.Deviation?.forEach((deviation) => deviations.add(deviation?.Description));
+      ts.Deviations = deviations;
       output.push(ts);
     } else {
+      let deviations = new Set();
       ts.AdvertisedTrainIdent = data[i].AdvertisedTrainIdent;
       ts.LocationSignature = data[i].LocationSignature;
       if (data[i].FromLocation || data[i].ToLocation) {
@@ -47,6 +51,8 @@ export function scheduleCleaner(json) {
         }
         continue;
       }
+      data[i]?.Deviation?.forEach((deviation) => deviations.add(deviation?.Description));
+      ts.Deviations = deviations;
       output.push(ts);
     }
   }

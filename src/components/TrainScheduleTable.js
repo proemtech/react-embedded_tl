@@ -12,12 +12,15 @@ export default function TrainScheduleTable({ trainSchedule }) {
             <th>Spår</th>
             <th>Tid</th>
             <th>Faktisk</th>
+            <th>Avvikelse</th>
           </tr>
         </thead>
         <tbody>
           {trainSchedule?.map((row) => (
             <tr key={Math.random()}>
-              <td><Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link></td>
+              <td>
+                <Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link>
+              </td>
               <td>
                 {row.DepartureData?.TrackAtLocation && row.DepartureData?.TrackAtLocation !== "x"
                   ? row.DepartureData?.TrackAtLocation
@@ -41,7 +44,10 @@ export default function TrainScheduleTable({ trainSchedule }) {
                 {row.ArrivalState?.activity && (
                   <>
                     {" "}
-                    <span style={{ color: row.ArrivalState?.textColor }}>({row.ArrivalState?.prefix}{row.ArrivalState?.minutes})</span>
+                    <span style={{ color: row.ArrivalState?.textColor }}>
+                      ({row.ArrivalState?.prefix}
+                      {row.ArrivalState?.minutes})
+                    </span>
                   </>
                 )}
                 {row.ArrivalData?.AdvertisedTimeAtLocation && row.DepartureData?.AdvertisedTimeAtLocation ? (
@@ -51,13 +57,23 @@ export default function TrainScheduleTable({ trainSchedule }) {
                 )}
                 {row.DepartureData?.TimeAtLocation ? (
                   <>{getShortTime(row.DepartureData?.TimeAtLocation)}</>
-                ) : (<>&nbsp;</>)}
+                ) : (
+                  <>&nbsp;</>
+                )}
                 {row.DepartureState?.activity && (
                   <>
                     {" "}
-                    <span style={{ color: row.DepartureState?.textColor }}>({row.DepartureState?.prefix}{row.DepartureState?.minutes})</span>
+                    <span style={{ color: row.DepartureState?.textColor }}>
+                      ({row.DepartureState?.prefix}
+                      {row.DepartureState?.minutes})
+                    </span>
                   </>
                 )}
+              </td>
+              <td>
+                {Array.from(row.Deviations).map((deviation) => (
+                  <div key={Math.random()}>{deviation}</div>
+                ))}
               </td>
             </tr>
           ))}
