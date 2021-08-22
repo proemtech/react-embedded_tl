@@ -17,6 +17,7 @@ export default function TrainPage() {
   const [trainStatusStreamUrl, setTrainStatusStreamUrl] = useState(null);
 
   useEffect(() => {
+    let eventSource;
     async function getTrainData() {
       const trainScheduleResponse = await fetchJsonResponse(
         trainScheduleQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
@@ -26,9 +27,9 @@ export default function TrainPage() {
       );
       setTrainSchedule(scheduleCleaner(trainScheduleResponse));
       setTrainStatus(calcTrainStatus(trainStatusResponse.TrainAnnouncement[0]));
-      
+
       if (trainStatusStreamUrl === null) {
-      console.log(`Updated at ${getLongTime(new Date())}`);
+        console.log(`Updated at ${getLongTime(new Date())}`);
         setTrainStatusStreamUrl(trainStatusResponse?.INFO?.SSEURL);
       }
     }
@@ -37,7 +38,7 @@ export default function TrainPage() {
 
     if (trainStatusStreamUrl) {
       // Set event source
-      var eventSource = new EventSource(trainStatusStreamUrl);
+      eventSource = new EventSource(trainStatusStreamUrl);
 
       // Error handling
       eventSource.onerror = (event) => {
@@ -54,10 +55,11 @@ export default function TrainPage() {
       };
     }
 
-    return () => {
-    };
+    return () => {};
   }, [trainIdent, searchDate, trainStatusStreamUrl]);
 
+  // Set doc title
+  document.title = `Tåg ${trainIdent}`;
 
   return (
     <div>

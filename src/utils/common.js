@@ -10,7 +10,6 @@ export const fullDateTimeOptions = {
   day: "numeric",
   hour: "numeric",
   minute: "numeric",
-  second: "numeric",
 };
 
 export const fullTimeOptions = {
@@ -35,4 +34,8 @@ export function getLongTime(dateTimeString) {
 
 export function getDateFormat(dateTimeString) {
   return new Intl.DateTimeFormat("sv-SE", dateOptions).format(new Date(dateTimeString));
+}
+
+export function getLongDateFormat(dateTimeString) {
+  return new Intl.DateTimeFormat("sv-SE", fullDateTimeOptions).format(new Date(dateTimeString));
 }
