@@ -59,7 +59,11 @@ export default function TrainPage() {
   }, [trainIdent, searchDate, trainStatusStreamUrl]);
 
   // Set doc title
-  document.title = `Tåg ${trainIdent}`;
+  if (trainStatus?.activity !== undefined) {
+    document.title = `Tåg ${trainIdent}: ${trainStatus.activity === "Ankomst" ? "*" : ""}${trainStatus.location} ${trainStatus.prefix}${trainStatus.minutes}`;
+  } else {
+    document.title = `Tåg ${trainIdent}`;
+  }
 
   return (
     <div>

@@ -41,7 +41,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                 {row.ArrivalState?.activity && (
                   <>
                     {" "}
-                    <span style={{ color: row.ArrivalState?.textColor }}>({row.ArrivalState?.minutes})</span>
+                    <span style={{ color: row.ArrivalState?.textColor }}>({row.ArrivalState?.prefix}{row.ArrivalState?.minutes})</span>
                   </>
                 )}
                 {row.ArrivalData?.AdvertisedTimeAtLocation && row.DepartureData?.AdvertisedTimeAtLocation ? (
@@ -55,7 +55,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                 {row.DepartureState?.activity && (
                   <>
                     {" "}
-                    <span style={{ color: row.DepartureState?.textColor }}>({row.DepartureState?.minutes})</span>
+                    <span style={{ color: row.DepartureState?.textColor }}>({row.DepartureState?.prefix}{row.DepartureState?.minutes})</span>
                   </>
                 )}
               </td>
