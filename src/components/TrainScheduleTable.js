@@ -33,21 +33,21 @@ export default function TrainScheduleTable({ trainSchedule }) {
               <td>
                 <div
                   style={
-                    row.ArrivalData?.Canceled
-                      ? { fontWeight: "bold", textDecoration: "line-through" }
-                      : { fontWeight: "bold" }
+                    row.ArrivalData?.Canceled || row.ArrivalData?.EstimatedTimeAtLocation
+                      ? { fontWeight: "600", textDecoration: "line-through" }
+                      : { fontWeight: "600" }
                   }
                 >
                   {row.ArrivalData?.AdvertisedTimeAtLocation && (
                     <>{getLongTime(row.ArrivalData?.AdvertisedTimeAtLocation)}</>
                   )}
                 </div>
-                <div>
-                  {row.DepartureData?.EstimatedTimeAtLocation && (
-                    <>Ber: {getLongTime(row.DepartureData?.EstimatedTimeAtLocation)}</>
+                <div style={{fontWeight: "600", fontStyle: "italic" }}>
+                  {row.ArrivalData?.EstimatedTimeAtLocation && (
+                    <>{getLongTime(row.ArrivalData?.EstimatedTimeAtLocation)} (!)</>
                   )}
                 </div>
-                <div>
+                <div style={{ fontWeight: "100", fontStyle: "italic" }}>
                   {row.ArrivalData?.TimeAtLocationWithSeconds
                     ? getLongTime(row.ArrivalData?.TimeAtLocationWithSeconds)
                     : ""}
@@ -65,21 +65,21 @@ export default function TrainScheduleTable({ trainSchedule }) {
               <td>
                 <div
                   style={
-                    row.DepartureData?.Canceled
-                      ? { fontWeight: "bold", textDecoration: "line-through" }
-                      : { fontWeight: "bold" }
+                    row.DepartureData?.Canceled || row.DepartureData?.EstimatedTimeAtLocation
+                      ? { fontWeight: "600", textDecoration: "line-through" }
+                      : { fontWeight: "600" }
                   }
                 >
                   {row.DepartureData?.AdvertisedTimeAtLocation && (
                     <>{getLongTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
                   )}
                 </div>
-                <div>
+                <div style={{fontWeight: "600", fontStyle: "italic" }}>
                   {row.DepartureData?.EstimatedTimeAtLocation && (
-                    <>Ber: {getLongTime(row.DepartureData?.EstimatedTimeAtLocation)}</>
+                    <>{getLongTime(row.DepartureData?.EstimatedTimeAtLocation)} (!)</>
                   )}
                 </div>
-                <div>
+                <div style={{ fontWeight: "100", fontStyle: "italic" }}>
                   {row.DepartureData?.TimeAtLocationWithSeconds ? (
                     <>{getLongTime(row.DepartureData?.TimeAtLocationWithSeconds)}</>
                   ) : (
