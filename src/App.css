@@ -35,6 +35,7 @@ td, th {
 
 td {
   vertical-align: top;
+  white-space: nowrap;
 }
 
 th {
