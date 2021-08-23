@@ -10,8 +10,8 @@ export default function TrainScheduleTable({ trainSchedule }) {
           <tr>
             <th>Plats</th>
             <th>Spår</th>
-            <th>Tid</th>
-            <th>Faktisk</th>
+            <th>Ank.</th>
+            <th>Avg.</th>
             <th>Avvikelse</th>
           </tr>
         </thead>
@@ -19,26 +19,34 @@ export default function TrainScheduleTable({ trainSchedule }) {
           {trainSchedule?.map((row) => (
             <tr key={Math.random()}>
               <td>
-                <Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link>
+                <div style={{ fontWeight: "bold" }}>
+                  <Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link>
+                </div>
               </td>
               <td>
-                {row.DepartureData?.TrackAtLocation && row.DepartureData?.TrackAtLocation !== "x"
-                  ? row.DepartureData?.TrackAtLocation
-                  : row.ArrivalData?.TrackAtLocation}
+                <div style={{ fontWeight: "bold" }}>
+                  {row.DepartureData?.TrackAtLocation && row.DepartureData?.TrackAtLocation !== "x"
+                    ? row.DepartureData?.TrackAtLocation
+                    : row.ArrivalData?.TrackAtLocation}
+                </div>
               </td>
               <td>
-                <div style={row.ArrivalData?.Canceled ? { textDecoration: "line-through" } : {}}>
+                <div
+                  style={
+                    row.ArrivalData?.Canceled
+                      ? { fontWeight: "bold", textDecoration: "line-through" }
+                      : { fontWeight: "bold" }
+                  }
+                >
                   {row.ArrivalData?.AdvertisedTimeAtLocation && (
                     <>{getLongTime(row.ArrivalData?.AdvertisedTimeAtLocation)}</>
                   )}
                 </div>
-                <div style={row.DepartureData?.Canceled ? { textDecoration: "line-through" } : {}}>
-                  {row.DepartureData?.AdvertisedTimeAtLocation && (
-                    <>{getLongTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
+                <div>
+                  {row.DepartureData?.EstimatedTimeAtLocation && (
+                    <>Ber: {getLongTime(row.DepartureData?.EstimatedTimeAtLocation)}</>
                   )}
                 </div>
-              </td>
-              <td>
                 <div>
                   {row.ArrivalData?.TimeAtLocationWithSeconds
                     ? getLongTime(row.ArrivalData?.TimeAtLocationWithSeconds)
@@ -51,6 +59,24 @@ export default function TrainScheduleTable({ trainSchedule }) {
                         {row.ArrivalState?.minutes})
                       </span>
                     </>
+                  )}
+                </div>
+              </td>
+              <td>
+                <div
+                  style={
+                    row.DepartureData?.Canceled
+                      ? { fontWeight: "bold", textDecoration: "line-through" }
+                      : { fontWeight: "bold" }
+                  }
+                >
+                  {row.DepartureData?.AdvertisedTimeAtLocation && (
+                    <>{getLongTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
+                  )}
+                </div>
+                <div>
+                  {row.DepartureData?.EstimatedTimeAtLocation && (
+                    <>Ber: {getLongTime(row.DepartureData?.EstimatedTimeAtLocation)}</>
                   )}
                 </div>
                 <div>
