@@ -111,7 +111,7 @@ export default function StationPage() {
           </div>
         </div>
         {arrivalsData !== null && departuresData !== null ? (
-          <div className="content">
+          <div className="stationBoard">
             <div className="half">
               {arrivalsData !== null ? <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" /> : <></>}
             </div>

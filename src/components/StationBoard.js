@@ -24,11 +24,11 @@ export default function StationBoard({ locationId, data, type }) {
                 <td><Link to={`/train/${row.AdvertisedTrainIdent}/${getDateFormat(row.ScheduledDepartureDateTime)}`}>{row.AdvertisedTrainIdent}</Link></td>
                 <td><Link to={`/station/${row.FromLocation[0]?.LocationName}`}>{row.FromLocation[0]?.LocationName}</Link></td>
                 <td><Link to={`/station/${row.ToLocation[0]?.LocationName}`}>{row.ToLocation[0]?.LocationName}</Link></td>
-                <td>{getShortTime(row.AdvertisedTimeAtLocation)}</td>
+                <td><div style={row.Canceled ? {textDecoration: "line-through"} : {}}>{getShortTime(row.AdvertisedTimeAtLocation)}</div></td>
                 <td>{row.TrackAtLocation}</td>
                 <td>
                   {row.Canceled ? (
-                    <div style={row.Canceled ? { color: "#F91730", fontStyle: "italic" } : null}>
+                    <div>
                       {row.Canceled ? "Inställt" : ""}
                     </div>
                   ) : (

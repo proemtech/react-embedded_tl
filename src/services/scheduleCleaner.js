@@ -32,7 +32,14 @@ export function scheduleCleaner(json) {
           ts.DepartureState = calcTrainStatus(data[i]);
         }
       }
-      data[i]?.Deviation?.forEach((deviation) => deviations.add(deviation?.Description));
+      data[i]?.Deviation?.forEach((deviation) => {
+        if (deviation?.Code === "ANA027") {
+          if (data[i]?.ActivityType === "Ankomst") deviations.add("Inställd ankomst");
+          if (data[i]?.ActivityType === "Avgang") deviations.add("Inställd avgång");
+        } else {
+          deviations.add(deviation?.Description)
+        }
+      });
       ts.Deviations = deviations;
       output.push(ts);
     } else {
@@ -51,7 +58,14 @@ export function scheduleCleaner(json) {
         }
         continue;
       }
-      data[i]?.Deviation?.forEach((deviation) => deviations.add(deviation?.Description));
+      data[i]?.Deviation?.forEach((deviation) => {
+        if (deviation?.Code === "ANA027") {
+          if (data[i]?.ActivityType === "Ankomst") deviations.add("Inställd ankomst");
+          if (data[i]?.ActivityType === "Avgang") deviations.add("Inställd avgång");
+        } else {
+          deviations.add(deviation?.Description)
+        }
+      });
       ts.Deviations = deviations;
       output.push(ts);
     }

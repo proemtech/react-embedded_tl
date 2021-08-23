@@ -27,48 +27,42 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   : row.ArrivalData?.TrackAtLocation}
               </td>
               <td>
-                {row.ArrivalData?.AdvertisedTimeAtLocation
-                  ? getShortTime(row.ArrivalData?.AdvertisedTimeAtLocation)
-                  : ""}
-                {row.ArrivalData?.AdvertisedTimeAtLocation && row.DepartureData?.AdvertisedTimeAtLocation ? (
-                  <br />
-                ) : (
-                  <></>
-                )}
-                {row.DepartureData?.AdvertisedTimeAtLocation && (
-                  <>{getShortTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
-                )}
+                <div style={row.ArrivalData?.Canceled ? {textDecoration: "line-through"} : {}}>
+                  {row.ArrivalData?.AdvertisedTimeAtLocation
+                    ? getShortTime(row.ArrivalData?.AdvertisedTimeAtLocation)
+                    : ""}
+                </div>
+                <div style={row.DepartureData?.Canceled ? {textDecoration: "line-through"} : {}}>
+                  {row.DepartureData?.AdvertisedTimeAtLocation && (
+                    <>{getShortTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
+                  )}
+                </div>
               </td>
               <td>
-                {row.ArrivalData?.TimeAtLocation ? getShortTime(row.ArrivalData?.TimeAtLocation) : ""}
-                {row.ArrivalState?.activity && (
-                  <>
-                    {" "}
-                    <span style={{ color: row.ArrivalState?.textColor }}>
-                      ({row.ArrivalState?.prefix}
-                      {row.ArrivalState?.minutes})
-                    </span>
-                  </>
-                )}
-                {row.ArrivalData?.AdvertisedTimeAtLocation && row.DepartureData?.AdvertisedTimeAtLocation ? (
-                  <br />
-                ) : (
-                  <></>
-                )}
-                {row.DepartureData?.TimeAtLocation ? (
-                  <>{getShortTime(row.DepartureData?.TimeAtLocation)}</>
-                ) : (
-                  <>&nbsp;</>
-                )}
-                {row.DepartureState?.activity && (
-                  <>
-                    {" "}
-                    <span style={{ color: row.DepartureState?.textColor }}>
-                      ({row.DepartureState?.prefix}
-                      {row.DepartureState?.minutes})
-                    </span>
-                  </>
-                )}
+                <div>
+                  {row.ArrivalData?.TimeAtLocation ? getShortTime(row.ArrivalData?.TimeAtLocation) : ""}
+                  {row.ArrivalState?.activity && (
+                    <>
+                      {" "}
+                      <span style={{ color: row.ArrivalState?.textColor }}>
+                        ({row.ArrivalState?.prefix}
+                        {row.ArrivalState?.minutes})
+                      </span>
+                    </>
+                  )}
+                </div>
+                <div>
+                  {row.DepartureData?.TimeAtLocation ? <>{getShortTime(row.DepartureData?.TimeAtLocation)}</> : ""}
+                  {row.DepartureState?.activity && (
+                    <>
+                      {" "}
+                      <span style={{ color: row.DepartureState?.textColor }}>
+                        ({row.DepartureState?.prefix}
+                        {row.DepartureState?.minutes})
+                      </span>
+                    </>
+                  )}
+                </div>
               </td>
               <td>
                 {Array.from(row.Deviations).map((deviation) => (

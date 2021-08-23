@@ -48,6 +48,25 @@ tbody > tr:nth-child(even) {
   background: #333;
 }
 
+/* Custom classes */
+
+.activityType {
+  color: #f1f1f1;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.clock {
+  text-align: right;
+  width: fit-content;
+}
+
+.currentTime {
+  font-size: calc(18px + 1vmin);
+  margin: 10px 10px;
+  text-align: right;
+}
+
 .content {
   display: flex;
   flex-direction: row;
@@ -69,22 +88,21 @@ tbody > tr:nth-child(even) {
   width: 50%;
 }
 
-.activityType {
-  color: #f1f1f1;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.currentTime {
-  font-size: calc(18px + 1vmin);
-  margin: 10px 10px;
-  text-align: right;
-}
-
 .locationId {
   color: #f1f1f1;
   margin: 10px 10px;
   text-align: left;
+}
+
+.pageTitle {
+  width: auto;
+}
+
+.stationBoard {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
 }
 
 .trainMessageCard {
@@ -95,4 +113,14 @@ tbody > tr:nth-child(even) {
 
 .trainStatus {
   margin: 0px 10px;
+}
+
+/* Media queries */
+@media screen and (max-width: 1000px) {
+  .stationBoard {
+    flex-direction: column;
+  }
+  .half {
+    width: 100%;
+  }
 }
