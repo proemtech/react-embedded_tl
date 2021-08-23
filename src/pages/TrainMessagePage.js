@@ -6,6 +6,7 @@ import { trainMessageQuery } from "../services/queries/trainMessageQuery";
 import { stationNameQuery } from "../services/queries/stationNameQuery";
 import { getLongTime } from "../utils/common";
 import TrainMessageCard from "../components/TrainMessageCard";
+import LastUpdateInfo from "../components/LastUpdateInfo";
 
 export default function TrainMessagePage() {
   const { locationId } = useParams();
@@ -69,10 +70,16 @@ export default function TrainMessagePage() {
       {messages && (
         <>
           {messages.TrainMessage?.map((msg) => (
-            <TrainMessageCard msg={msg}  key={msg.EventId} />
+            <TrainMessageCard msg={msg} key={msg.EventId} />
           ))}
         </>
       )}
+      {messages?.TrainMessage?.length === 0 && (
+        <h4 style={{ textAlign: "center" }}>Ingen nuläget finns inga meddelanden att visa.</h4>
+      )}
+      <div className="content">
+        <LastUpdateInfo dateTime={new Date()} />
+      </div>
     </>
   );
 }

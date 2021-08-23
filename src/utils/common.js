@@ -10,6 +10,7 @@ export const fullDateTimeOptions = {
   day: "numeric",
   hour: "numeric",
   minute: "numeric",
+  second: "numeric",
 };
 
 export const fullTimeOptions = {

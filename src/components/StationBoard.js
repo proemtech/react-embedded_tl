@@ -5,7 +5,7 @@ import { getDateFormat, getShortTime } from "../utils/common";
 export default function StationBoard({ locationId, data, type }) {
   if (data !== null) {
     return (
-      <div>
+      <div className="tableContent">
         {type === "arrivals" ? <h4 className="activityType"><Link to={`/station/${locationId}/arrivals`}>Ankomster</Link></h4> : <h4 className="activityType"><Link to={`/station/${locationId}/departures`}>Avgångar</Link></h4>}
         <table>
           <thead>

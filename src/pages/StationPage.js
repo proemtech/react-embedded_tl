@@ -6,14 +6,19 @@ import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { stationQuery } from "../services/queries/stationQuery";
 import { stationNameQuery } from "../services/queries/stationNameQuery";
+import { trainMessageQuery } from "../services/queries/trainMessageQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import Clock from "../components/Clock";
+import LastUpdateInfo from "../components/LastUpdateInfo";
 import LocationNameTitle from "../components/LocationNameTitle";
+import TrainMessageCard from "../components/TrainMessageCard";
 
 export default function StationPage() {
   const { locationId, type } = useParams();
   const [arrivalsData, setArrivalsData] = useState(null);
   const [departuresData, setDeparturesData] = useState(null);
+  const [messages, setMessages] = useState(null);
+  const [messageStreamUrl, setMessageStreamUrl] = useState(null);
   const [locationName, setLocationName] = useState(null);
 
   useEffect(() => {
@@ -67,6 +72,43 @@ export default function StationPage() {
     };
   }, [locationId, type]);
 
+  // Get train messages
+  useEffect(() => {
+    let eventSource;
+    async function getMessages() {
+      const result = await fetchJsonResponse(trainMessageQuery(locationId));
+      const stationName = await fetchJsonResponse(stationNameQuery(locationId));
+
+      setLocationName(stationName.TrainStation[0]?.OfficialLocationName);
+      setMessages(result);
+      if (messageStreamUrl === null) {
+        console.log(`Updated at ${getLongTime(new Date())}`);
+        setMessageStreamUrl(result?.INFO?.SSEURL);
+      }
+    }
+    getMessages();
+
+    // Start stream
+    if (messageStreamUrl) {
+      // Set event source
+      eventSource = new EventSource(messageStreamUrl);
+
+      // Error handling
+      eventSource.onerror = (event) => {
+        console.error(event.error);
+      };
+
+      // Message on stream open
+      eventSource.onopen = () => console.log(`Stream open at ${getLongTime(new Date())}`);
+
+      // Message handler
+      eventSource.onmessage = (event) => {
+        console.log(`Stream ping at ${getLongTime(new Date())}`);
+        getMessages();
+      };
+    }
+  }, [locationId, messageStreamUrl]);
+
   if (type === "arrivals") {
     document.title = `Ankomster ${locationId}`;
     return (
@@ -80,6 +122,16 @@ export default function StationPage() {
           </div>
         </div>
         {arrivalsData !== null ? <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" /> : <></>}
+        {messages?.TrainMessage?.length !== 0 && (
+          <>
+            {messages?.TrainMessage?.map((msg) => (
+              <TrainMessageCard msg={msg} key={msg.EventId} />
+            ))}
+          </>
+        )}
+        <div className="content">
+          <LastUpdateInfo dateTime={new Date()} />
+        </div>
       </div>
     );
   }
@@ -95,7 +147,21 @@ export default function StationPage() {
             <Clock />
           </div>
         </div>
-        {departuresData !== null ? <StationBoard locationId={locationId} data={departuresData} type="departures" /> : <></>}
+        {departuresData !== null ? (
+          <StationBoard locationId={locationId} data={departuresData} type="departures" />
+        ) : (
+          <></>
+        )}
+        {messages?.TrainMessage?.length !== 0 && (
+          <>
+            {messages?.TrainMessage?.map((msg) => (
+              <TrainMessageCard msg={msg} key={msg.EventId} />
+            ))}
+          </>
+        )}
+        <div className="content">
+          <LastUpdateInfo dateTime={new Date()} />
+        </div>
       </div>
     );
   } else {
@@ -113,10 +179,18 @@ export default function StationPage() {
         {arrivalsData !== null && departuresData !== null ? (
           <div className="stationBoard">
             <div className="half">
-              {arrivalsData !== null ? <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" /> : <></>}
+              {arrivalsData !== null ? (
+                <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" />
+              ) : (
+                <></>
+              )}
             </div>
             <div className="half">
-              {departuresData !== null ? <StationBoard locationId={locationId} data={departuresData} type="departures" /> : <></>}
+              {departuresData !== null ? (
+                <StationBoard locationId={locationId} data={departuresData} type="departures" />
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         ) : (
@@ -133,6 +207,16 @@ export default function StationPage() {
             )}
           </div>
         )}
+        {messages?.TrainMessage?.length !== 0 && (
+          <>
+            {messages?.TrainMessage?.map((msg) => (
+              <TrainMessageCard msg={msg} key={msg.EventId} />
+            ))}
+          </>
+        )}
+        <div className="content">
+          <LastUpdateInfo dateTime={new Date()} />
+        </div>
       </div>
     );
   }

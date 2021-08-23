@@ -5,15 +5,19 @@
  */
 
 export async function apiCaller(query) {
-  const response = await fetch("https://api.trafikinfo.trafikverket.se/v2/data.json", {
-    method: "POST",
-    mode: "cors",
-    cache: "no-cache",
-    headers: {
-      "Content-Type": "text/xml",
-    },
-    redirect: "follow",
-    body: query,
-  });
-  return response
+  try {
+    const response = await fetch("https://api.trafikinfo.trafikverket.se/v2/data.json", {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "text/xml",
+      },
+      redirect: "follow",
+      body: query,
+    });
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Clock from "../components/Clock";
+import LastUpdateInfo from "../components/LastUpdateInfo";
 import TrainScheduleTable from "../components/TrainScheduleTable";
 import TrainStatus from "../components/TrainStatus";
 import { calcTrainStatus } from "../services/calcTrainStatus";
@@ -77,6 +78,7 @@ export default function TrainPage() {
       </div>
       <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
       <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
+      <div className="content"><LastUpdateInfo dateTime={new Date()} /></div>
     </div>
   );
 }

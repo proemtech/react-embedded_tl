@@ -3,6 +3,12 @@ body {
   color: white;
   font-family: monospace;
   font-size: calc(10px + 1vmin);
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 a {
@@ -25,6 +31,10 @@ td, th {
   border: 0px;
   margin: 0px;
   padding: 10px
+}
+
+td {
+  vertical-align: top;
 }
 
 th {
@@ -88,6 +98,11 @@ tbody > tr:nth-child(even) {
   width: 50%;
 }
 
+.lastUpdateText {
+  font-size: calc(8px + 1vmin);
+  margin: 10px auto;
+}
+
 .locationId {
   color: #f1f1f1;
   margin: 10px 10px;
@@ -103,6 +118,17 @@ tbody > tr:nth-child(even) {
   flex-direction: row;
   align-items: stretch;
   width: 100%;
+}
+
+.tableContent {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  overflow: scroll;
+  width: 100%;
+}
+
+.tableContent::-webkit-scrollbar {
+  display: none;
 }
 
 .trainMessageCard {

@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { getShortTime } from "../utils/common";
+import { getLongTime } from "../utils/common";
 
 export default function TrainScheduleTable({ trainSchedule }) {
   return (
-    <>
+    <div className="tableContent">
       <table>
         <thead>
           <tr>
@@ -27,20 +27,22 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   : row.ArrivalData?.TrackAtLocation}
               </td>
               <td>
-                <div style={row.ArrivalData?.Canceled ? {textDecoration: "line-through"} : {}}>
-                  {row.ArrivalData?.AdvertisedTimeAtLocation
-                    ? getShortTime(row.ArrivalData?.AdvertisedTimeAtLocation)
-                    : ""}
+                <div style={row.ArrivalData?.Canceled ? { textDecoration: "line-through" } : {}}>
+                  {row.ArrivalData?.AdvertisedTimeAtLocation && (
+                    <>{getLongTime(row.ArrivalData?.AdvertisedTimeAtLocation)}</>
+                  )}
                 </div>
-                <div style={row.DepartureData?.Canceled ? {textDecoration: "line-through"} : {}}>
+                <div style={row.DepartureData?.Canceled ? { textDecoration: "line-through" } : {}}>
                   {row.DepartureData?.AdvertisedTimeAtLocation && (
-                    <>{getShortTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
+                    <>{getLongTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
                   )}
                 </div>
               </td>
               <td>
                 <div>
-                  {row.ArrivalData?.TimeAtLocation ? getShortTime(row.ArrivalData?.TimeAtLocation) : ""}
+                  {row.ArrivalData?.TimeAtLocationWithSeconds
+                    ? getLongTime(row.ArrivalData?.TimeAtLocationWithSeconds)
+                    : ""}
                   {row.ArrivalState?.activity && (
                     <>
                       {" "}
@@ -52,7 +54,11 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   )}
                 </div>
                 <div>
-                  {row.DepartureData?.TimeAtLocation ? <>{getShortTime(row.DepartureData?.TimeAtLocation)}</> : ""}
+                  {row.DepartureData?.TimeAtLocationWithSeconds ? (
+                    <>{getLongTime(row.DepartureData?.TimeAtLocationWithSeconds)}</>
+                  ) : (
+                    ""
+                  )}
                   {row.DepartureState?.activity && (
                     <>
                       {" "}
@@ -73,6 +79,6 @@ export default function TrainScheduleTable({ trainSchedule }) {
           ))}
         </tbody>
       </table>
-    </>
+    </div>
   );
 }
