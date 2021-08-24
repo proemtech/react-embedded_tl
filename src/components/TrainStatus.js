@@ -1,4 +1,5 @@
 import React from "react";
+import { getLongTime } from "../utils/common";
 
 export default function TrainStatus({ trainStatus }) {
   return (
@@ -6,7 +7,7 @@ export default function TrainStatus({ trainStatus }) {
       {trainStatus?.activity && (
         <span style={{ color: trainStatus?.textColor }}>
           {trainStatus?.activity === "Ankomst" ? "Ankom " : "Avgick "}
-          {trainStatus?.location} {trainStatus?.prefix}{trainStatus?.minutes}
+          {trainStatus?.location} kl {getLongTime(trainStatus.timeAtLocation)} ({trainStatus?.prefix}{trainStatus?.minutes})
         </span>
       )}
     </div>

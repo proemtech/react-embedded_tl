@@ -5,12 +5,12 @@ export function calcTrainStatus(trainAnnouncement) {
     let prefix = "";
 
     if (
-      trainAnnouncement.TechnicalTimeAtLocation !== null ||
-      trainAnnouncement.AdvertisedTimeAtLocation !== trainAnnouncement.TechnicalTimeAtLocation
+      trainAnnouncement.TechnicalDateTime !== null ||
+      trainAnnouncement.AdvertisedTimeAtLocation !== trainAnnouncement.TechnicalDateTime
     ) {
-      advertised = new Date(trainAnnouncement.AdvertisedTimeAtLocation);
+      advertised = new Date(trainAnnouncement.TechnicalDateTime);
     } else {
-      advertised = new Date(trainAnnouncement.TechnicalTimeAtLocation);
+      advertised = new Date(trainAnnouncement.AdvertisedTimeAtLocation);
     }
     let minutes = Math.floor((actual - advertised) / 1000 / 60);
     let textColor;
@@ -32,6 +32,7 @@ export function calcTrainStatus(trainAnnouncement) {
     let output = {
       activity: trainAnnouncement.ActivityType,
       location: trainAnnouncement.LocationSignature,
+      timeAtLocation: trainAnnouncement.TimeAtLocationWithSeconds,
       minutes: minutes,
       isDelayed: minutes > 0 ? true : false,
       prefix: prefix,
