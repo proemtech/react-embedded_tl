@@ -5,7 +5,7 @@ export function calcTrainStatus(trainAnnouncement) {
     let prefix = "";
 
     if (
-      trainAnnouncement.TechnicalDateTime !== null ||
+      trainAnnouncement.TechnicalDateTime !== undefined &&
       trainAnnouncement.AdvertisedTimeAtLocation !== trainAnnouncement.TechnicalDateTime
     ) {
       advertised = new Date(trainAnnouncement.TechnicalDateTime);
