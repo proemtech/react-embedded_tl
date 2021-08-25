@@ -75,7 +75,7 @@ export default function TrainMessagePage() {
         </>
       )}
       {messages?.TrainMessage?.length === 0 && (
-        <h4 style={{ textAlign: "center" }}>Ingen nuläget finns inga meddelanden att visa.</h4>
+        <h4 style={{ textAlign: "center" }}>Det finns inga aktuella meddelanden att visa.</h4>
       )}
       <div className="content">
         <LastUpdateInfo dateTime={new Date()} />
