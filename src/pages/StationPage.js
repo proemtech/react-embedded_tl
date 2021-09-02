@@ -37,7 +37,7 @@ export default function StationPage() {
     async function getStationData(type) {
       console.log(`Updated at ${getLongTime(new Date())}`);
       const stationName = await fetchJsonResponse(stationNameQuery(locationId));
-      setLocationName(stationName.TrainStation[0]?.OfficialLocationName);
+      setLocationName(stationName?.TrainStation[0]?.OfficialLocationName);
 
       if (type === undefined || type === "arrivals") {
         const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst"));

@@ -8,6 +8,7 @@ import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { trainScheduleQuery } from "../services/queries/trainScheduleQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
+import { trainStreamQuery } from "../services/queries/trainStreamQuery";
 import { scheduleCleaner } from "../services/scheduleCleaner";
 import { getDateFormat, getLongTime } from "../utils/common";
 
@@ -20,18 +21,22 @@ export default function TrainPage() {
   useEffect(() => {
     let eventSource;
     async function getTrainData() {
+      // Fetch data
       const trainScheduleResponse = await fetchJsonResponse(
         trainScheduleQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
       );
       const trainStatusResponse = await fetchJsonResponse(
         trainStatusQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
       );
+      const trainStreamResponse = await fetchJsonResponse(trainStreamQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date())));
+
+      // Set data
       setTrainSchedule(scheduleCleaner(trainScheduleResponse));
       setTrainStatus(calcTrainStatus(trainStatusResponse.TrainAnnouncement[0]));
 
       if (trainStatusStreamUrl === null) {
         console.log(`Updated at ${getLongTime(new Date())}`);
-        setTrainStatusStreamUrl(trainStatusResponse?.INFO?.SSEURL);
+        setTrainStatusStreamUrl(trainStreamResponse?.INFO?.SSEURL);
       }
     }
 
