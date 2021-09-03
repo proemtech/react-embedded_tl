@@ -1,8 +1,8 @@
 import { calcTrainStatus } from "./calcTrainStatus";
 import { TrainSchedule } from "../models/TrainSchedule";
 
-export function scheduleCleaner(json) {
-  let data = json?.TrainAnnouncement;
+export function scheduleCleaner(data) {
+  //let data = json?.TrainAnnouncement;
   // Initiera variabler och lista över slutprodukt
   let previousLocation;
   let output = [];
@@ -15,6 +15,7 @@ export function scheduleCleaner(json) {
       ts = new TrainSchedule();
       ts.AdvertisedTrainIdent = data[i].AdvertisedTrainIdent;
       ts.LocationSignature = data[i].LocationSignature;
+      ts.LocationName = data[i].LocationName?.AdvertisedLocationName;
       if (data[i].FromLocation || data[i].ToLocation) {
         ts.FromLocation = data[i].FromLocation[0].LocationName;
         ts.ToLocation = data[i].ToLocation[0].LocationName;

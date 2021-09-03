@@ -42,7 +42,9 @@ export default function StationPage() {
       if (type === undefined || type === "arrivals") {
         const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst"));
         const arrivals = await Promise.all(
-          response.TrainAnnouncement?.map(async (item) => {
+          response?.TrainAnnouncement?.map(async (item) => {
+            item.FromLocationName = await fetchJsonResponse(stationNameQuery(item.FromLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
+            item.ToLocationName = await fetchJsonResponse(stationNameQuery(item.ToLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
             item.TrainStatus = await getTrainState(item.TechnicalTrainIdent, item.ScheduledDepartureDateTime);
             return item;
           })
@@ -54,6 +56,8 @@ export default function StationPage() {
         const response = await fetchJsonResponse(stationQuery(locationId, "Avgang"));
         const departures = await Promise.all(
           response.TrainAnnouncement?.map(async (item) => {
+            item.FromLocationName = await fetchJsonResponse(stationNameQuery(item.FromLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
+            item.ToLocationName = await fetchJsonResponse(stationNameQuery(item.ToLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
             item.TrainStatus = await getTrainState(item.TechnicalTrainIdent, item.ScheduledDepartureDateTime);
             return item;
           })
@@ -108,6 +112,9 @@ export default function StationPage() {
       };
     }
   }, [locationId, messageStreamUrl]);
+
+  console.log(arrivalsData)
+  console.log(departuresData)
 
   if (type === "arrivals") {
     document.title = `Ankomster ${locationId}`;

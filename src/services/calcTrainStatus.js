@@ -32,6 +32,7 @@ export function calcTrainStatus(trainAnnouncement) {
     let output = {
       activity: trainAnnouncement.ActivityType,
       location: trainAnnouncement.LocationSignature,
+      locationName: trainAnnouncement.LocationName?.AdvertisedLocationName,
       timeAtLocation: trainAnnouncement.TimeAtLocationWithSeconds,
       minutes: minutes,
       isDelayed: minutes > 0 ? true : false,

@@ -20,12 +20,23 @@ export default function TrainScheduleTable({ trainSchedule }) {
             <tr key={Math.random()}>
               <td>
                 <div style={{ fontWeight: "bold" }}>
+                  {row.LocationName !== null && row.LocationName !== undefined ? (
+<>
+                  <Link to={`/station/${row.LocationSignature}`}>{row.LocationName}</Link><br />
+                  <small>{row.LocationSignature}</small>
+                  </>
+                  ) : (
+                    <>
                   <Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link>
+                  </>
+                  )}
                 </div>
               </td>
               <td>
                 <div style={{ fontWeight: "bold" }}>
-                  {row.DepartureData?.TrackAtLocation && row.DepartureData?.TrackAtLocation !== "x"
+                  {row.DepartureData?.TrackAtLocation 
+                  && row.DepartureData?.TrackAtLocation !== "x"
+                  && row.DepartureData?.TrackAtLocation !== "-"
                     ? row.DepartureData?.TrackAtLocation
                     : row.ArrivalData?.TrackAtLocation}
                 </div>

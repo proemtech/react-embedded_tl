@@ -6,6 +6,7 @@ import TrainScheduleTable from "../components/TrainScheduleTable";
 import TrainStatus from "../components/TrainStatus";
 import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
+import { stationNameQuery } from "../services/queries/stationNameQuery";
 import { trainScheduleQuery } from "../services/queries/trainScheduleQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { trainStreamQuery } from "../services/queries/trainStreamQuery";
@@ -28,11 +29,32 @@ export default function TrainPage() {
       const trainStatusResponse = await fetchJsonResponse(
         trainStatusQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
       );
-      const trainStreamResponse = await fetchJsonResponse(trainStreamQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date())));
+      const trainStreamResponse = await fetchJsonResponse(
+        trainStreamQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
+      );
+
+      // Fetch names
+      const schedule = await Promise.all(
+        trainScheduleResponse?.TrainAnnouncement?.map(async (item) => {
+          const station = await fetchJsonResponse(stationNameQuery(item.LocationSignature));
+          item.LocationName = station?.TrainStation[0];
+          return item;
+        })
+      );
+
+      const status = await Promise.all(
+        trainStatusResponse?.TrainAnnouncement?.map(async (item) => {
+          item.LocationName = await fetchJsonResponse(stationNameQuery(item.LocationSignature)).then(
+            (value) => value?.TrainStation[0]
+          );
+          return item;
+        })
+      );
 
       // Set data
-      setTrainSchedule(scheduleCleaner(trainScheduleResponse));
-      setTrainStatus(calcTrainStatus(trainStatusResponse.TrainAnnouncement[0]));
+      setTrainSchedule(scheduleCleaner(schedule));
+      //await Promise.all(scheduleCleaner(trainScheduleResponse)).then(res => setTrainSchedule(res));
+      setTrainStatus(calcTrainStatus(status[0]));
 
       if (trainStatusStreamUrl === null) {
         console.log(`Updated at ${getLongTime(new Date())}`);
@@ -55,7 +77,7 @@ export default function TrainPage() {
       eventSource.onopen = () => console.log(`Stream open at ${getLongTime(new Date())}`);
 
       // Message handler
-      eventSource.onmessage = (event) => {
+      eventSource.onmessage = () => {
         console.log(`Stream ping at ${getLongTime(new Date())}`);
         getTrainData();
       };
@@ -66,7 +88,9 @@ export default function TrainPage() {
 
   // Set doc title
   if (trainStatus?.activity !== undefined) {
-    document.title = `Tåg ${trainIdent}: ${trainStatus.activity === "Ankomst" ? "*" : ""}${trainStatus.location} ${trainStatus.prefix}${trainStatus.minutes}`;
+    document.title = `Tåg ${trainIdent}: ${trainStatus.activity === "Ankomst" ? "*" : ""}${trainStatus.location} ${
+      trainStatus.prefix
+    }${trainStatus.minutes}`;
   } else {
     document.title = `Tåg ${trainIdent}`;
   }
@@ -83,7 +107,9 @@ export default function TrainPage() {
       </div>
       <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
       <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
-      <div className="content"><LastUpdateInfo dateTime={new Date()} /></div>
+      <div className="content">
+        <LastUpdateInfo dateTime={new Date()} />
+      </div>
     </div>
   );
 }

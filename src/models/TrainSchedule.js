@@ -3,6 +3,7 @@ export class TrainSchedule {
       this.AdvertisedTrainIdent = null;
       this.FromLocation = null;
       this.LocationSignature = null;
+      this.LocationName = null;
       this.ToLocation = null;
       this.Deviations = null;
       this.ArrivalData = {};
