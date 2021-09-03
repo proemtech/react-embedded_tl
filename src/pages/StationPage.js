@@ -113,9 +113,6 @@ export default function StationPage() {
     }
   }, [locationId, messageStreamUrl]);
 
-  console.log(arrivalsData)
-  console.log(departuresData)
-
   if (type === "arrivals") {
     document.title = `Ankomster ${locationId}`;
     return (
