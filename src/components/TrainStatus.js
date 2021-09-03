@@ -2,7 +2,6 @@ import React from "react";
 import { getLongTime } from "../utils/common";
 
 export default function TrainStatus({ trainStatus }) {
-  console.log(trainStatus)
   return (
     <div className="trainStatus">
       {trainStatus?.activity && (
