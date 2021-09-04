@@ -1,6 +1,9 @@
+import { getTrainStationName } from "./getTrainStationName";
+
 export function calcTrainStatus(trainAnnouncement) {
   if (trainAnnouncement !== undefined) {
     const actual = new Date(trainAnnouncement.TimeAtLocation);
+    const stationName = getTrainStationName(trainAnnouncement.LocationSignature);
     let advertised;
     let prefix = "";
 
@@ -32,14 +35,13 @@ export function calcTrainStatus(trainAnnouncement) {
     let output = {
       activity: trainAnnouncement.ActivityType,
       location: trainAnnouncement.LocationSignature,
-      locationName: trainAnnouncement.LocationName?.AdvertisedLocationName,
+      locationName: stationName?.AdvertisedLocationName,
       timeAtLocation: trainAnnouncement.TimeAtLocationWithSeconds,
       minutes: minutes,
       isDelayed: minutes > 0 ? true : false,
       prefix: prefix,
       textColor: textColor,
     };
-
     return output;
   }
   return {};

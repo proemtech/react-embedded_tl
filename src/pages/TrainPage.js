@@ -6,7 +6,7 @@ import TrainScheduleTable from "../components/TrainScheduleTable";
 import TrainStatus from "../components/TrainStatus";
 import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
-import { stationNameQuery } from "../services/queries/stationNameQuery";
+import { getTrainStationName } from "../services/getTrainStationName";
 import { trainScheduleQuery } from "../services/queries/trainScheduleQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { trainStreamQuery } from "../services/queries/trainStreamQuery";
@@ -36,17 +36,15 @@ export default function TrainPage() {
       // Fetch names
       const schedule = await Promise.all(
         trainScheduleResponse?.TrainAnnouncement?.map(async (item) => {
-          const station = await fetchJsonResponse(stationNameQuery(item.LocationSignature));
-          item.LocationName = station?.TrainStation[0];
+          const station = getTrainStationName(item.LocationSignature);
+          item.LocationName = station;
           return item;
         })
       );
 
       const status = await Promise.all(
         trainStatusResponse?.TrainAnnouncement?.map(async (item) => {
-          item.LocationName = await fetchJsonResponse(stationNameQuery(item.LocationSignature)).then(
-            (value) => value?.TrainStation[0]
-          );
+          item.LocationName = getTrainStationName(item.LocationSignature);
           return item;
         })
       );

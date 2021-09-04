@@ -23,7 +23,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   {row.LocationName !== null && row.LocationName !== undefined ? (
 <>
                   <Link to={`/station/${row.LocationSignature}`}>{row.LocationName}</Link><br />
-                  <small>{row.LocationSignature}</small>
+                  <small class="locationSignature">{row.LocationSignature}</small>
                   </>
                   ) : (
                     <>

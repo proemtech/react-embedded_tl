@@ -126,6 +126,11 @@ tbody > tr:nth-child(even) {
   text-align: left;
 }
 
+.locationSignature {
+  color: rgba(241, 241, 241, 0.25);
+  font-size: calc(8px + 0.5vmin);
+}
+
 .pageTitle {
   width: auto;
 }
@@ -163,6 +168,8 @@ tbody > tr:nth-child(even) {
   body {
     font-size: calc(8px + 0.8vmin);
   }
+}
+@media screen and (max-width: 1200px) {
   .stationBoard {
     flex-direction: column;
   }

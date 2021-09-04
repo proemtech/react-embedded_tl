@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import Clock from "../components/Clock";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { trainMessageQuery } from "../services/queries/trainMessageQuery";
-import { stationNameQuery } from "../services/queries/stationNameQuery";
 import { getLongTime } from "../utils/common";
 import TrainMessageCard from "../components/TrainMessageCard";
 import LastUpdateInfo from "../components/LastUpdateInfo";
+import { getTrainStationName } from "../services/getTrainStationName";
 
 export default function TrainMessagePage() {
   const { locationId } = useParams();
@@ -18,9 +18,9 @@ export default function TrainMessagePage() {
     let eventSource;
     async function getMessages() {
       const result = await fetchJsonResponse(trainMessageQuery(locationId));
-      const stationName = await fetchJsonResponse(stationNameQuery(locationId));
+      const stationName = getTrainStationName(locationId);
 
-      setLocationName(stationName.TrainStation[0]?.OfficialLocationName);
+      setLocationName(stationName?.AdvertisedLocationName);
       setMessages(result);
       if (messageStreamUrl === null) {
         console.log(`Updated at ${getLongTime(new Date())}`);

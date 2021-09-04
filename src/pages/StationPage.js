@@ -5,13 +5,13 @@ import { getDateFormat, getLongTime } from "../utils/common";
 import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { stationQuery } from "../services/queries/stationQuery";
-import { stationNameQuery } from "../services/queries/stationNameQuery";
 import { trainMessageQuery } from "../services/queries/trainMessageQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import Clock from "../components/Clock";
 import LastUpdateInfo from "../components/LastUpdateInfo";
 import LocationNameTitle from "../components/LocationNameTitle";
 import TrainMessageCard from "../components/TrainMessageCard";
+import { getTrainStationName } from "../services/getTrainStationName";
 
 export default function StationPage() {
   const { locationId, type } = useParams();
@@ -36,15 +36,15 @@ export default function StationPage() {
 
     async function getStationData(type) {
       console.log(`Updated at ${getLongTime(new Date())}`);
-      const stationName = await fetchJsonResponse(stationNameQuery(locationId));
-      setLocationName(stationName?.TrainStation[0]?.OfficialLocationName);
+      const stationName = getTrainStationName(locationId);
+      setLocationName(stationName?.AdvertisedLocationName);
 
       if (type === undefined || type === "arrivals") {
         const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst"));
         const arrivals = await Promise.all(
           response?.TrainAnnouncement?.map(async (item) => {
-            item.FromLocationName = await fetchJsonResponse(stationNameQuery(item.FromLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
-            item.ToLocationName = await fetchJsonResponse(stationNameQuery(item.ToLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
+            item.FromLocationName = getTrainStationName(item.FromLocation[0]?.LocationName);
+            item.ToLocationName = getTrainStationName(item.ToLocation[0]?.LocationName);
             item.TrainStatus = await getTrainState(item.TechnicalTrainIdent, item.ScheduledDepartureDateTime);
             return item;
           })
@@ -56,8 +56,8 @@ export default function StationPage() {
         const response = await fetchJsonResponse(stationQuery(locationId, "Avgang"));
         const departures = await Promise.all(
           response.TrainAnnouncement?.map(async (item) => {
-            item.FromLocationName = await fetchJsonResponse(stationNameQuery(item.FromLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
-            item.ToLocationName = await fetchJsonResponse(stationNameQuery(item.ToLocation[0]?.LocationName)).then(value => value?.TrainStation[0]);
+            item.FromLocationName = getTrainStationName(item.FromLocation[0]?.LocationName);
+            item.ToLocationName = getTrainStationName(item.ToLocation[0]?.LocationName);
             item.TrainStatus = await getTrainState(item.TechnicalTrainIdent, item.ScheduledDepartureDateTime);
             return item;
           })
@@ -81,9 +81,9 @@ export default function StationPage() {
     let eventSource;
     async function getMessages() {
       const result = await fetchJsonResponse(trainMessageQuery(locationId));
-      const stationName = await fetchJsonResponse(stationNameQuery(locationId));
+      const stationName = getTrainStationName(locationId);
 
-      setLocationName(stationName.TrainStation[0]?.OfficialLocationName);
+      setLocationName(stationName.AdvertisedLocationName);
       setMessages(result);
       if (messageStreamUrl === null) {
         console.log(`Updated at ${getLongTime(new Date())}`);

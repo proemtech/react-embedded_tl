@@ -68,7 +68,7 @@ export default function StationBoard({ locationId, data, type }) {
                   ) : (
                     <div style={row.TrainStatus ? { color: row.TrainStatus.textColor } : null}>
                       {row.TrainStatus.activity === "Ankomst" ? "*" : ""}
-                      {row.TrainStatus.location} {row.TrainStatus.prefix}
+                      {row.TrainStatus.locationName !== undefined && row.TrainStatus.locationName !== null ? row.TrainStatus.locationName : row.TrainStatus.location} {row.TrainStatus.prefix}
                       {row.TrainStatus.minutes}
                     </div>
                   )}
