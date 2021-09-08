@@ -16,10 +16,10 @@ export default function App() {
           <Route exact path="/train/:trainIdent/:searchDate?">
             <TrainPage />
           </Route>
-          <Route exact path="/station/:locationId">
+          <Route exact path="/station/:locationId/:limit?">
             <StationPage />
           </Route>
-          <Route exact path="/station/:locationId/:type?">
+          <Route exact path="/station/:locationId/:type?/:limit?">
             <StationPage />
           </Route>
           <Route exact path="/msg/:locationId">

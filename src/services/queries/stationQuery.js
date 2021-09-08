@@ -1,7 +1,7 @@
-export const stationQuery = (locationId, activityType) => `
+export const stationQuery = (locationId, activityType, limit) => `
   <REQUEST>
     <LOGIN authenticationkey="${process.env.REACT_APP_TRV_APIKEY}" />
-    <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="AdvertisedTimeAtLocation" limit="25">
+    <QUERY objecttype="TrainAnnouncement" schemaversion="1.6" orderby="AdvertisedTimeAtLocation" limit="${isNaN(limit) ? 25 : limit}">
       <FILTER>
       <AND>
       <EQ name="ActivityType" value="${activityType}" />

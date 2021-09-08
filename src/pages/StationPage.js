@@ -14,7 +14,7 @@ import TrainMessageCard from "../components/TrainMessageCard";
 import { getTrainStationName } from "../services/getTrainStationName";
 
 export default function StationPage() {
-  const { locationId, type } = useParams();
+  const { locationId, type, limit } = useParams();
   const [arrivalsData, setArrivalsData] = useState(null);
   const [departuresData, setDeparturesData] = useState(null);
   const [messages, setMessages] = useState(null);
@@ -40,7 +40,7 @@ export default function StationPage() {
       setLocationName(stationName?.AdvertisedLocationName);
 
       if (type === undefined || type === "arrivals") {
-        const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst"));
+        const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst", isNaN(limit) ? 25 : limit));
         const arrivals = await Promise.all(
           response?.TrainAnnouncement?.map(async (item) => {
             item.FromLocationName = getTrainStationName(item.FromLocation[0]?.LocationName);
@@ -53,7 +53,7 @@ export default function StationPage() {
         setArrivalsData(arrivals);
       }
       if (type === undefined || type === "departures") {
-        const response = await fetchJsonResponse(stationQuery(locationId, "Avgang"));
+        const response = await fetchJsonResponse(stationQuery(locationId, "Avgang", isNaN(limit) ? 25 : limit));
         const departures = await Promise.all(
           response.TrainAnnouncement?.map(async (item) => {
             item.FromLocationName = getTrainStationName(item.FromLocation[0]?.LocationName);
