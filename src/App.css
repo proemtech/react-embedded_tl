@@ -142,6 +142,29 @@ tbody > tr:nth-child(even) {
   width: 100%;
 }
 
+.stationBoardTrainIdent {
+  text-align: left;
+  width: 80px;
+}
+
+.stationBoardLocation {
+  width: 250px;
+}
+
+.stationBoardTimeAtLocation {
+  width: 80px;
+}
+
+.stationBoardTrackAtLocation {
+  text-align: center;
+  width: 80px;
+}
+
+.stationBoardInfo {
+  width: auto;
+}
+
+
 .tableContent {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

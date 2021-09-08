@@ -28,13 +28,13 @@ export default function StationBoard({ locationId, data, type }) {
           <tbody>
             {data?.map((row) => (
               <tr key={Math.random()}>
-                <td>
+                <td className="stationBoardTrainIdent">
                   <Link to={`/train/${row.AdvertisedTrainIdent}/${getDateFormat(row.ScheduledDepartureDateTime)}`}>
                     {row.AdvertisedTrainIdent}
                   </Link>
                 </td>
                 {type === "arrivals" ? (
-                  <td title={row.FromLocationName.AdvertisedLocationName}>
+                  <td title={row.FromLocationName.AdvertisedLocationName} className="stationBoardLocation">
                     {row.FromLocationName !== null && row.FromLocationName !== undefined ? (
                       <Link to={`/station/${row.FromLocation[0]?.LocationName}`}>
                         {row.FromLocationName?.AdvertisedLocationName}
@@ -46,7 +46,7 @@ export default function StationBoard({ locationId, data, type }) {
                     )}
                   </td>
                 ) : (
-                  <td title={row.ToLocationName.AdvertisedLocationName}>
+                  <td title={row.ToLocationName.AdvertisedLocationName} className="stationBoardLocation">
                     {row.FromLocationName !== null && row.FromLocationName !== undefined ? (
                       <Link to={`/station/${row.ToLocation[0]?.LocationName}`}>
                         {row.ToLocationName?.AdvertisedLocationName}
@@ -56,13 +56,13 @@ export default function StationBoard({ locationId, data, type }) {
                     )}
                   </td>
                 )}
-                <td>
+                <td className="stationBoardTimeAtLocation">
                   <div style={row.Canceled ? { textDecoration: "line-through" } : {}}>
                     {getShortTime(row.AdvertisedTimeAtLocation)}
                   </div>
                 </td>
-                <td>{row.TrackAtLocation}</td>
-                <td>
+                <td className="stationBoardTrackAtLocation">{row.TrackAtLocation}</td>
+                <td className="stationBoardInfo">
                   {row.Canceled ? (
                     <div>{row.Canceled ? "Inställt" : ""}</div>
                   ) : (
