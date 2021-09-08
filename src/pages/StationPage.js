@@ -70,7 +70,7 @@ export default function StationPage() {
     getStationData(type);
     interval = setInterval(() => {
       getStationData(type);
-    }, 30000);
+    }, 60000);
 
     return () => {
       clearInterval(interval);
