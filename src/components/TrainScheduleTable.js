@@ -18,7 +18,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
         <tbody>
           {trainSchedule?.map((row) => (
             <tr key={Math.random()}>
-              <td>
+              <td className="scheduleLocation">
                 <div style={{ fontWeight: "bold" }}>
                   {row.LocationName !== null && row.LocationName !== undefined ? (
 <>
@@ -32,7 +32,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   )}
                 </div>
               </td>
-              <td>
+              <td className="scheduleTrack">
                 <div style={{ fontWeight: "bold" }}>
                   {row.DepartureData?.TrackAtLocation 
                   && row.DepartureData?.TrackAtLocation !== "x"
@@ -41,7 +41,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                     : row.ArrivalData?.TrackAtLocation}
                 </div>
               </td>
-              <td>
+              <td className="scheduleTimeAtLocation">
                 <div
                   style={
                     row.ArrivalData?.Canceled || row.ArrivalData?.EstimatedTimeAtLocation
@@ -73,7 +73,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   )}
                 </div>
               </td>
-              <td>
+              <td className="scheduleTimeAtLocation">
                 <div
                   style={
                     row.DepartureData?.Canceled || row.DepartureData?.EstimatedTimeAtLocation
@@ -107,7 +107,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                   )}
                 </div>
               </td>
-              <td>
+              <td className="scheduleInfo">
                 {Array.from(row.Deviations).map((deviation) => (
                   <div key={Math.random()}>{deviation}</div>
                 ))}

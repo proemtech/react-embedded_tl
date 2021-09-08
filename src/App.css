@@ -135,6 +135,23 @@ tbody > tr:nth-child(even) {
   width: auto;
 }
 
+.scheduleLocation {
+  width: 400px;
+}
+
+.scheduleTrack {
+  text-align: center;
+  width: 80px;
+}
+
+.scheduleTimeAtLocation {
+  width: 200px;
+}
+
+.scheduleInfo {
+  width: auto;
+}
+
 .stationBoard {
   display: flex;
   flex-direction: row;
