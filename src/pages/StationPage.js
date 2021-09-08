@@ -74,7 +74,7 @@ export default function StationPage() {
     return () => {
       clearInterval(interval);
     };
-  }, [locationId, type]);
+  }, [locationId, type, limit]);
 
   // Get train messages
   useEffect(() => {
