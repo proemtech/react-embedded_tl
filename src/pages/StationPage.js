@@ -12,6 +12,7 @@ import LastUpdateInfo from "../components/LastUpdateInfo";
 import LocationNameTitle from "../components/LocationNameTitle";
 import TrainMessageCard from "../components/TrainMessageCard";
 import { getTrainStationName } from "../services/getTrainStationName";
+import Help from "../components/Help";
 
 export default function StationPage() {
   const { locationId, type, limit } = useParams();
@@ -218,6 +219,7 @@ export default function StationPage() {
             ))}
           </>
         )}
+        <Help />
         <div className="content">
           <LastUpdateInfo dateTime={new Date()} />
         </div>

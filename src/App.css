@@ -105,6 +105,11 @@ tbody > tr:nth-child(even) {
   width: 50%;
 }
 
+.helpText {
+  color: rgba(241, 241, 241, 0.33);
+  font-size: calc(8px + 0.5vmin);
+}
+
 .homePage {
   margin-left: auto;
   margin-right: auto;
