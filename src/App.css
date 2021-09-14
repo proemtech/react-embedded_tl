@@ -122,7 +122,7 @@ tbody > tr:nth-child(even) {
 
 .lastUpdateText {
   font-size: calc(8px + 1vmin);
-  margin: 10px auto;
+  margin: 10px auto 50px;
 }
 
 .locationId {
