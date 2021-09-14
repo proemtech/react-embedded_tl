@@ -18,6 +18,7 @@ export default function StationPage() {
   const { locationId, type, limit } = useParams();
   const [arrivalsData, setArrivalsData] = useState(null);
   const [departuresData, setDeparturesData] = useState(null);
+  const [errors, setErrors] = useState(null);
   const [messages, setMessages] = useState(null);
   const [messageStreamUrl, setMessageStreamUrl] = useState(null);
   const [locationName, setLocationName] = useState(null);
@@ -100,6 +101,7 @@ export default function StationPage() {
 
       // Error handling
       eventSource.onerror = (event) => {
+        setErrors(event.error);
         console.error(event.error);
       };
 
@@ -118,6 +120,9 @@ export default function StationPage() {
     document.title = `Ankomster ${locationId}`;
     return (
       <div>
+        {errors && (
+          <div className="content">{errors}</div>
+        )}
         <div className="content">
           <div className="half">
             <LocationNameTitle locationId={locationId} locationName={locationName} />

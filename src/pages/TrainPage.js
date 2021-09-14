@@ -16,12 +16,14 @@ import { getDateFormat, getLongTime } from "../utils/common";
 
 export default function TrainPage() {
   const { trainIdent, searchDate } = useParams();
+  const [errors, setErrors] = useState(null);
   const [trainSchedule, setTrainSchedule] = useState(null);
   const [trainStatus, setTrainStatus] = useState(null);
   const [trainStatusStreamUrl, setTrainStatusStreamUrl] = useState(null);
 
   useEffect(() => {
     let eventSource;
+
     async function getTrainData() {
       // Fetch data
       const trainScheduleResponse = await fetchJsonResponse(
@@ -61,7 +63,12 @@ export default function TrainPage() {
       }
     }
 
-    getTrainData();
+    try {
+      getTrainData();
+    } catch (error) {
+      setErrors(error);
+    }
+
 
     if (trainStatusStreamUrl) {
       // Set event source
@@ -70,6 +77,7 @@ export default function TrainPage() {
       // Error handling
       eventSource.onerror = (event) => {
         console.error(event.error);
+        setErrors(event.error);
       };
 
       // Message on stream open
@@ -79,6 +87,7 @@ export default function TrainPage() {
       eventSource.onmessage = () => {
         console.log(`Stream ping at ${getLongTime(new Date())}`);
         getTrainData();
+        setErrors(null);
       };
     }
 
@@ -96,6 +105,9 @@ export default function TrainPage() {
 
   return (
     <div>
+      {errors && (
+        <div className="content">{errors}</div>
+      )}
       <div className="content">
         <div className="half">
           <h2 className="locationId">Tåg {trainIdent}</h2>
