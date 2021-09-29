@@ -186,7 +186,6 @@ tbody > tr:nth-child(even) {
   width: auto;
 }
 
-
 .tableContent {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -220,5 +219,83 @@ tbody > tr:nth-child(even) {
   }
   .half {
     width: 100%;
+  }
+}
+
+/* Loading indicator */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  margin: 1rem;
+}
+
+.loading-dot {
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 1rem;
+  background-color: rgb(200, 200, 200);
+  display: inline-block;
+  margin: 0.5rem;
+  animation: loading 6s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+  vertical-align: middle;
+}
+
+.loading-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.loading-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.loading-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.loading-dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.loading-dot:nth-child(4) {
+  animation-delay: 0.8s;
+}
+.loading-dot:nth-child(5) {
+  animation-delay: 1.0s;
+}
+.loading-dot:nth-child(6) {
+  animation-delay: 1.2s;
+}
+.loading-dot:nth-child(7) {
+  animation-delay: 1.4s;
+}
+.loading-dot:nth-child(8) {
+  animation-delay: 1.6s;
+}
+.loading-dot:nth-child(9) {
+  animation-delay: 1.8s;
+}
+.loading-dot:nth-child(10) {
+  animation-delay: 2.0s;
+}
+
+@keyframes loading {
+  0%,
+  100% {
+    background-color: rgb(245, 158, 12);
+    height: 0.5rem;
+  }
+  20% {
+    height: 3rem;
+  }
+  40% {
+    height: 0.5rem;
+  }
+  50% {
+    background-color: rgb(150, 150, 150);
+    height: 0.5rem;
+  }
+  70% {
+    height: 3rem;
+  }
+  90% {
+    height: 0.5rem;
   }
 }

@@ -15,13 +15,14 @@ import { getTrainStationName } from "../services/getTrainStationName";
 import Help from "../components/Help";
 
 export default function StationPage() {
-  const { locationId, type, limit } = useParams();
+  const { locationId, type, limit = 25 } = useParams();
   const [arrivalsData, setArrivalsData] = useState(null);
   const [departuresData, setDeparturesData] = useState(null);
   const [errors, setErrors] = useState(null);
   const [messages, setMessages] = useState(null);
   const [messageStreamUrl, setMessageStreamUrl] = useState(null);
   const [locationName, setLocationName] = useState(null);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     let interval;
@@ -37,6 +38,8 @@ export default function StationPage() {
     }
 
     async function getStationData(type) {
+      setLoading(true);
+
       console.log(`Updated at ${getLongTime(new Date())}`);
       const stationName = getTrainStationName(locationId);
       setLocationName(stationName?.AdvertisedLocationName);
@@ -66,6 +69,7 @@ export default function StationPage() {
         );
         setDeparturesData(departures);
       }
+      setLoading(false);
     }
 
     getStationData(type);
@@ -120,9 +124,7 @@ export default function StationPage() {
     document.title = `Ankomster ${locationId}`;
     return (
       <div>
-        {errors && (
-          <div className="content">{errors}</div>
-        )}
+        {errors && <div className="content">{errors}</div>}
         <div className="content">
           <div className="half">
             <LocationNameTitle locationId={locationId} locationName={locationName} />
@@ -131,6 +133,22 @@ export default function StationPage() {
             <Clock />
           </div>
         </div>
+        {isLoading && (
+          <div>
+            <div className="loading">
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+              <div className="loading-dot"></div>
+            </div>
+          </div>
+        )}
         {arrivalsData !== null ? <StationBoard locationId={locationId} data={arrivalsData} type="arrivals" /> : <></>}
         {messages?.TrainMessage?.length !== 0 && (
           <>

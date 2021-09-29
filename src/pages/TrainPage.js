@@ -20,11 +20,13 @@ export default function TrainPage() {
   const [trainSchedule, setTrainSchedule] = useState(null);
   const [trainStatus, setTrainStatus] = useState(null);
   const [trainStatusStreamUrl, setTrainStatusStreamUrl] = useState(null);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     let eventSource;
 
     async function getTrainData() {
+      setLoading(true);
       // Fetch data
       const trainScheduleResponse = await fetchJsonResponse(
         trainScheduleQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
@@ -57,6 +59,8 @@ export default function TrainPage() {
       //await Promise.all(scheduleCleaner(trainScheduleResponse)).then(res => setTrainSchedule(res));
       setTrainStatus(calcTrainStatus(status[0]));
 
+      setLoading(false);
+
       if (trainStatusStreamUrl === null) {
         console.log(`Updated at ${getLongTime(new Date())}`);
         setTrainStatusStreamUrl(trainStreamResponse?.INFO?.SSEURL);
@@ -68,7 +72,6 @@ export default function TrainPage() {
     } catch (error) {
       setErrors(error);
     }
-
 
     if (trainStatusStreamUrl) {
       // Set event source
@@ -105,9 +108,7 @@ export default function TrainPage() {
 
   return (
     <div>
-      {errors && (
-        <div className="content">{errors}</div>
-      )}
+      {errors && <div className="content">{errors}</div>}
       <div className="content">
         <div className="half">
           <h2 className="locationId">Tåg {trainIdent}</h2>
@@ -119,6 +120,22 @@ export default function TrainPage() {
       <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
       <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
       <Help />
+      {isLoading && (
+        <div>
+          <div className="loading">
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+            <div className="loading-dot"></div>
+          </div>
+        </div>
+      )}
       <div className="content">
         <LastUpdateInfo dateTime={new Date()} />
       </div>

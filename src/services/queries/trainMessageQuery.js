@@ -1,4 +1,4 @@
-export const trainMessageQuery = locationId => `
+export const trainMessageQuery = (locationId) => `
         <REQUEST>
           <LOGIN authenticationkey="${process.env.REACT_APP_TRV_APIKEY}" />
           <QUERY objecttype="TrainMessage" schemaversion="1.7" orderby="LastUpdateDateTime desc" sseurl="true">
@@ -7,4 +7,17 @@ export const trainMessageQuery = locationId => `
             </FILTER>
             <EXCLUDE>CountyNo</EXCLUDE>
           </QUERY>
-        </REQUEST>`
+        </REQUEST>`;
+
+export const allIncidentsQuery = () => `
+<REQUEST>
+<LOGIN authenticationkey="${process.env.REACT_APP_TRV_APIKEY}" />
+<QUERY objecttype="TrainMessage" schemaversion="1.7" orderby="LastUpdateDateTime desc" sseurl="true">
+  <FILTER>
+    <NOT>
+      <EQ name="ReasonCode.Code" value="IBT" />
+    </NOT>
+  </FILTER>
+  <EXCLUDE>CountyNo</EXCLUDE>
+</QUERY>
+</REQUEST>`;

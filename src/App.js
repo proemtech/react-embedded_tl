@@ -22,7 +22,7 @@ export default function App() {
           <Route exact path="/station/:locationId/:type?/:limit?">
             <StationPage />
           </Route>
-          <Route exact path="/msg/:locationId">
+          <Route exact path="/msg/:locationId?">
             <TrainMessagePage />
           </Route>
         </Switch>
