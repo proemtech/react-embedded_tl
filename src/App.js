@@ -19,8 +19,11 @@ export default function App() {
           <Route exact path="/station/:locationId/:limit?">
             <StationPage />
           </Route>
-          <Route exact path="/station/:locationId/:type?/:limit?">
-            <StationPage />
+          <Route exact path="/arrivals/:locationId/:limit?">
+            <StationPage type="arrivals" />
+          </Route>
+          <Route exact path="/departures/:locationId/:limit?">
+            <StationPage type="departures" />
           </Route>
           <Route exact path="/msg/:locationId?">
             <TrainMessagePage />

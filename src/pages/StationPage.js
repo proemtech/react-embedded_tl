@@ -14,8 +14,8 @@ import TrainMessageCard from "../components/TrainMessageCard";
 import { getTrainStationName } from "../services/getTrainStationName";
 import Help from "../components/Help";
 
-export default function StationPage() {
-  const { locationId, type, limit = 25 } = useParams();
+export default function StationPage({type}) {
+  const { locationId, limit = 25 } = useParams();
   const [arrivalsData, setArrivalsData] = useState(null);
   const [departuresData, setDeparturesData] = useState(null);
   const [errors, setErrors] = useState(null);

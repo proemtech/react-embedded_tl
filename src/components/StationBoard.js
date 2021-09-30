@@ -8,11 +8,11 @@ export default function StationBoard({ locationId, data, type }) {
       <div className="tableContent">
         {type === "arrivals" ? (
           <h4 className="activityType">
-            <Link to={`/station/${locationId}/arrivals`}>Ankomster</Link>
+            <Link to={`/arrivals/${locationId}`}>Ankomster</Link>
           </h4>
         ) : (
           <h4 className="activityType">
-            <Link to={`/station/${locationId}/departures`}>Avgångar</Link>
+            <Link to={`/departures/${locationId}`}>Avgångar</Link>
           </h4>
         )}
         <table>
