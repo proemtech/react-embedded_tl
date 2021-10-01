@@ -197,6 +197,12 @@ tbody > tr:nth-child(even) {
   display: none;
 }
 
+.trainInfo {
+  color: rgba(241, 241, 241, 0.25);
+  font-size: calc(12px + 0.5vmin);
+  margin: -10px 10px 10px;
+}
+
 .trainMessageCard {
   background-color: #333;
   margin: 10px;

@@ -1,9 +1,9 @@
 import { getTrainStationName } from "./getTrainStationName";
 
-export function calcTrainStatus(trainAnnouncement) {
+export async function calcTrainStatus(trainAnnouncement) {
   if (trainAnnouncement !== undefined) {
     const actual = new Date(trainAnnouncement.TimeAtLocation);
-    const stationName = getTrainStationName(trainAnnouncement.LocationSignature);
+    const stationName = await getTrainStationName(trainAnnouncement.LocationSignature);
     let advertised;
     let prefix = "";
 

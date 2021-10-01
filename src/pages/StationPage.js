@@ -41,15 +41,15 @@ export default function StationPage({type}) {
       setLoading(true);
 
       console.log(`Updated at ${getLongTime(new Date())}`);
-      const stationName = getTrainStationName(locationId);
+      const stationName = await getTrainStationName(locationId);
       setLocationName(stationName?.AdvertisedLocationName);
 
       if (type === undefined || type === "arrivals") {
         const response = await fetchJsonResponse(stationQuery(locationId, "Ankomst", isNaN(limit) ? 25 : limit));
         const arrivals = await Promise.all(
           response?.TrainAnnouncement?.map(async (item) => {
-            item.FromLocationName = getTrainStationName(item.FromLocation[0]?.LocationName);
-            item.ToLocationName = getTrainStationName(item.ToLocation[0]?.LocationName);
+            item.FromLocationName = await getTrainStationName(item.FromLocation[0]?.LocationName);
+            item.ToLocationName = await getTrainStationName(item.ToLocation[0]?.LocationName);
             item.TrainStatus = await getTrainState(item.TechnicalTrainIdent, item.ScheduledDepartureDateTime);
             return item;
           })
@@ -61,8 +61,8 @@ export default function StationPage({type}) {
         const response = await fetchJsonResponse(stationQuery(locationId, "Avgang", isNaN(limit) ? 25 : limit));
         const departures = await Promise.all(
           response.TrainAnnouncement?.map(async (item) => {
-            item.FromLocationName = getTrainStationName(item.FromLocation[0]?.LocationName);
-            item.ToLocationName = getTrainStationName(item.ToLocation[0]?.LocationName);
+            item.FromLocationName = await getTrainStationName(item.FromLocation[0]?.LocationName);
+            item.ToLocationName = await getTrainStationName(item.ToLocation[0]?.LocationName);
             item.TrainStatus = await getTrainState(item.TechnicalTrainIdent, item.ScheduledDepartureDateTime);
             return item;
           })
@@ -87,7 +87,7 @@ export default function StationPage({type}) {
     let eventSource;
     async function getMessages() {
       const result = await fetchJsonResponse(trainMessageQuery(locationId));
-      const stationName = getTrainStationName(locationId);
+      const stationName = await getTrainStationName(locationId);
 
       setLocationName(stationName.AdvertisedLocationName);
       setMessages(result);

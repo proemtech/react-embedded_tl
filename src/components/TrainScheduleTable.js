@@ -21,22 +21,23 @@ export default function TrainScheduleTable({ trainSchedule }) {
               <td className="scheduleLocation">
                 <div style={{ fontWeight: "bold" }}>
                   {row.LocationName !== null && row.LocationName !== undefined ? (
-<>
-                  <Link to={`/station/${row.LocationSignature}`}>{row.LocationName}</Link><br />
-                  <small className="locationSignature">{row.LocationSignature}</small>
-                  </>
+                    <>
+                      <Link to={`/station/${row.LocationSignature}`}>{row.LocationName}</Link>
+                      <br />
+                      <small className="locationSignature">{row.LocationSignature}</small>
+                    </>
                   ) : (
                     <>
-                  <Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link>
-                  </>
+                      <Link to={`/station/${row.LocationSignature}`}>{row.LocationSignature}</Link>
+                    </>
                   )}
                 </div>
               </td>
               <td className="scheduleTrack">
                 <div style={{ fontWeight: "bold" }}>
-                  {row.DepartureData?.TrackAtLocation 
-                  && row.DepartureData?.TrackAtLocation !== "x"
-                  && row.DepartureData?.TrackAtLocation !== "-"
+                  {row.DepartureData?.TrackAtLocation &&
+                  row.DepartureData?.TrackAtLocation !== "x" &&
+                  row.DepartureData?.TrackAtLocation !== "-"
                     ? row.DepartureData?.TrackAtLocation
                     : row.ArrivalData?.TrackAtLocation}
                 </div>
@@ -53,7 +54,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                     <>{getLongTime(row.ArrivalData?.AdvertisedTimeAtLocation)}</>
                   )}
                 </div>
-                <div style={{fontWeight: "600", fontStyle: "italic" }}>
+                <div style={{ fontWeight: "600", fontStyle: "italic" }}>
                   {row.ArrivalData?.EstimatedTimeAtLocation && (
                     <>{getLongTime(row.ArrivalData?.EstimatedTimeAtLocation)} (!)</>
                   )}
@@ -85,7 +86,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                     <>{getLongTime(row.DepartureData?.AdvertisedTimeAtLocation)}</>
                   )}
                 </div>
-                <div style={{fontWeight: "600", fontStyle: "italic" }}>
+                <div style={{ fontWeight: "600", fontStyle: "italic" }}>
                   {row.DepartureData?.EstimatedTimeAtLocation && (
                     <>{getLongTime(row.DepartureData?.EstimatedTimeAtLocation)} (!)</>
                   )}

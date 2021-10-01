@@ -41,7 +41,7 @@ export default function TrainPage() {
       // Fetch names
       const schedule = await Promise.all(
         trainScheduleResponse?.TrainAnnouncement?.map(async (item) => {
-          const station = getTrainStationName(item.LocationSignature);
+          const station = await getTrainStationName(item.LocationSignature);
           item.LocationName = station;
           return item;
         })
@@ -49,7 +49,7 @@ export default function TrainPage() {
 
       const status = await Promise.all(
         trainStatusResponse?.TrainAnnouncement?.map(async (item) => {
-          item.LocationName = getTrainStationName(item.LocationSignature);
+          item.LocationName = await getTrainStationName(item.LocationSignature);
           return item;
         })
       );
@@ -57,7 +57,7 @@ export default function TrainPage() {
       // Set data
       setTrainSchedule(scheduleCleaner(schedule));
       //await Promise.all(scheduleCleaner(trainScheduleResponse)).then(res => setTrainSchedule(res));
-      setTrainStatus(calcTrainStatus(status[0]));
+      setTrainStatus(await calcTrainStatus(status[0]));
 
       setLoading(false);
 
@@ -112,6 +112,14 @@ export default function TrainPage() {
       <div className="content">
         <div className="half">
           <h2 className="locationId">Tåg {trainIdent}</h2>
+          {trainSchedule && (
+            <div className="trainInfo">
+              <small>
+                {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description} (
+                {trainSchedule[0]?.DepartureData?.InformationOwner},{" "}{trainSchedule[0]?.DepartureData?.Operator})
+              </small>
+            </div>
+          )}
         </div>
         <div className="half">
           <Clock />

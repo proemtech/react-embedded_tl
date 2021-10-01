@@ -5,7 +5,9 @@ export const stationNameQuery = (locationId) => `
         <FILTER>
             <EQ name="LocationSignature" value="${locationId}" />
         </FILTER>
+        <INCLUDE>Advertised</INCLUDE>
         <INCLUDE>AdvertisedLocationName</INCLUDE>
+        <INCLUDE>LocationSignature</INCLUDE>
         <INCLUDE>OfficialLocationName</INCLUDE>
     </QUERY>
 </REQUEST>`;

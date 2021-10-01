@@ -46,7 +46,7 @@ export default function StationBoard({ locationId, data, type }) {
                     )}
                   </td>
                 ) : (
-                  <td title={row.ToLocationName.AdvertisedLocationName} className="stationBoardLocation">
+                  <td title={row.ToLocationName?.AdvertisedLocationName} className="stationBoardLocation">
                     {row.FromLocationName !== null && row.FromLocationName !== undefined ? (
                       <Link to={`/station/${row.ToLocation[0]?.LocationName}`}>
                         {row.ToLocationName?.AdvertisedLocationName}
