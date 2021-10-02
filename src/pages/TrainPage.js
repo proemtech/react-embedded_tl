@@ -55,7 +55,7 @@ export default function TrainPage() {
       );
 
       // Set data
-      setTrainSchedule(scheduleCleaner(schedule));
+      setTrainSchedule(await scheduleCleaner(schedule));
       //await Promise.all(scheduleCleaner(trainScheduleResponse)).then(res => setTrainSchedule(res));
       setTrainStatus(await calcTrainStatus(status[0]));
 

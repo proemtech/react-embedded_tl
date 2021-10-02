@@ -1,7 +1,7 @@
 import { calcTrainStatus } from "./calcTrainStatus";
 import { TrainSchedule } from "../models/TrainSchedule";
 
-export function scheduleCleaner(data) {
+export async function scheduleCleaner(data) {
   //let data = json?.TrainAnnouncement;
   // Initiera variabler och lista över slutprodukt
   let previousLocation;
@@ -25,12 +25,12 @@ export function scheduleCleaner(data) {
       if (data[i].ActivityType === "Ankomst") {
         ts.ArrivalData = data[i];
         if (data[i].TimeAtLocation) {
-          ts.ArrivalState = calcTrainStatus(data[i]);
+          ts.ArrivalState = await calcTrainStatus(data[i]);
         }
       } else {
         ts.DepartureData = data[i];
         if (data[i].TimeAtLocation) {
-          ts.DepartureState = calcTrainStatus(data[i]);
+          ts.DepartureState = await calcTrainStatus(data[i]);
         }
       }
       data[i]?.Deviation?.forEach((deviation) => {
@@ -55,7 +55,7 @@ export function scheduleCleaner(data) {
       if (data[i].ActivityType === "Avgang") {
         ts.DepartureData = data[i];
         if (data[i].TimeAtLocation) {
-          ts.DepartureState = calcTrainStatus(data[i]);
+          ts.DepartureState = await calcTrainStatus(data[i]);
         }
         continue;
       }

@@ -285,7 +285,7 @@ tbody > tr:nth-child(even) {
 @keyframes loading {
   0%,
   100% {
-    background-color: rgb(245, 158, 12);
+    background-color: rgb(225,225,225);
     height: 0.5rem;
   }
   20% {
@@ -295,7 +295,7 @@ tbody > tr:nth-child(even) {
     height: 0.5rem;
   }
   50% {
-    background-color: rgb(150, 150, 150);
+    background-color: rgb(175,175,175);
     height: 0.5rem;
   }
   70% {

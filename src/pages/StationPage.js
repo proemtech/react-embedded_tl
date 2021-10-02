@@ -31,7 +31,7 @@ export default function StationPage({type}) {
       if (searchDate !== undefined) {
         const trainState = await fetchJsonResponse(trainStatusQuery(trainIdent, getDateFormat(searchDate)));
         if (trainState.TrainAnnouncement[0]?.TimeAtLocation) {
-          return calcTrainStatus(trainState.TrainAnnouncement[0]);
+          return await calcTrainStatus(trainState.TrainAnnouncement[0]);
         }
       }
       return {};
