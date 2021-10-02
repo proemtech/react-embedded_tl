@@ -117,6 +117,12 @@ export default function TrainPage() {
       <div className="content">
         <div className="half">
           <h2 className="locationId">Tåg {trainIdent}</h2>
+        </div>
+        <div className="half">
+          <Clock />
+        </div>
+      </div>
+      <div className="content">
           {trainSchedule !== null && (
             <div className="trainInfo">
               <small>
@@ -137,10 +143,6 @@ export default function TrainPage() {
               </small>
             </div>
           )}
-        </div>
-        <div className="half">
-          <Clock />
-        </div>
       </div>
       <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
       <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
