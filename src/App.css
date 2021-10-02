@@ -106,7 +106,7 @@ tbody > tr:nth-child(even) {
 }
 
 .helpText {
-  color: rgba(241, 241, 241, 0.33);
+  color: rgba(241, 241, 241, 0.5);
   font-size: calc(8px + 0.5vmin);
 }
 
@@ -198,7 +198,7 @@ tbody > tr:nth-child(even) {
 }
 
 .trainInfo {
-  color: rgba(241, 241, 241, 0.25);
+  color: rgba(241, 241, 241, 0.75);
   font-size: calc(12px + 0.5vmin);
   margin: -10px 10px 10px;
 }
