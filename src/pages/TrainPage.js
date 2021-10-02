@@ -41,7 +41,13 @@ export default function TrainPage() {
       // Fetch names
       const schedule = await Promise.all(
         trainScheduleResponse?.TrainAnnouncement?.map(async (item) => {
-          const station = await getTrainStationName(item.LocationSignature);
+          // Fetching full names
+          const fromLocation = (await getTrainStationName(item?.FromLocation[0]?.LocationName)) ?? null;
+          const toLocation = (await getTrainStationName(item?.ToLocation[0]?.LocationName)) ?? null;
+          const station = await getTrainStationName(item?.LocationSignature);
+          // Insert full names and output item
+          item.FromLocationName = fromLocation;
+          item.ToLocationName = toLocation;
           item.LocationName = station;
           return item;
         })
@@ -56,7 +62,6 @@ export default function TrainPage() {
 
       // Set data
       setTrainSchedule(await scheduleCleaner(schedule));
-      //await Promise.all(scheduleCleaner(trainScheduleResponse)).then(res => setTrainSchedule(res));
       setTrainStatus(await calcTrainStatus(status[0]));
 
       setLoading(false);
@@ -112,11 +117,23 @@ export default function TrainPage() {
       <div className="content">
         <div className="half">
           <h2 className="locationId">Tåg {trainIdent}</h2>
-          {trainSchedule && (
+          {trainSchedule !== null && (
             <div className="trainInfo">
               <small>
-                {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description} (
-                {trainSchedule[0]?.DepartureData?.InformationOwner},{" "}{trainSchedule[0]?.DepartureData?.Operator})
+                {trainSchedule[0]?.DepartureData?.FromLocationName?.AdvertisedLocationName} -{" "}
+                {trainSchedule[0]?.DepartureData?.ToLocationName?.AdvertisedLocationName}
+              </small>
+              <br />
+              <small>
+                {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description}
+                {trainSchedule[0]?.DepartureData?.InformationOwner !== trainSchedule[0]?.DepartureData?.Operator && (
+                  <>
+                    {" "}({trainSchedule[0]?.DepartureData?.InformationOwner}, {trainSchedule[0]?.DepartureData?.Operator})
+                  </>
+                )}
+                {trainSchedule[0]?.DepartureData?.InformationOwner === trainSchedule[0]?.DepartureData?.Operator && (
+                  <>{" "}({trainSchedule[0]?.DepartureData.Operator})</>
+                )}
               </small>
             </div>
           )}
