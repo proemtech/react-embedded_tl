@@ -51,7 +51,7 @@ export default function TrainMessagePage() {
   }, [locationId, messageStreamUrl]);
 
   // Set doc title
-  document.title = `Trafikinformation ${locationName ? locationName : locationId}`;
+  document.title = `Trafikinformation ${locationName ? locationName : locationId !== undefined ? locationId : 'hela landet'}`;
   
   return (
     <>
@@ -60,7 +60,7 @@ export default function TrainMessagePage() {
           {locationName ? (
             <h2 className="locationId">Trafikinformation vid {locationName}</h2>
           ) : (
-            <h2 className="locationId">Trafikinformation för {locationId}</h2>
+            <h2 className="locationId">Trafikinformation {locationId !== undefined ? locationId : ''}</h2>
           )}
         </div>
         <div className="half">
