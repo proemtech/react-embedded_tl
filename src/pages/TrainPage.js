@@ -132,12 +132,12 @@ export default function TrainPage() {
               <br />
               <small>
                 {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description}
-                {trainSchedule[0]?.DepartureData?.InformationOwner.toLowerCase() !== trainSchedule[0]?.DepartureData?.Operator.toLowerCase() && (
+                {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() !== trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
                   <>
                     {" "}({trainSchedule[0]?.DepartureData?.InformationOwner}, {trainSchedule[0]?.DepartureData?.Operator})
                   </>
                 )}
-                {trainSchedule[0]?.DepartureData?.InformationOwner.toLowerCase() === trainSchedule[0]?.DepartureData?.Operator.toLowerCase() && (
+                {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() === trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
                   <>{" "}({trainSchedule[0]?.DepartureData.Operator})</>
                 )}
               </small>
