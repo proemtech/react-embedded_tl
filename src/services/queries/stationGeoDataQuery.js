@@ -1,4 +1,4 @@
-function stationGeoDataQuery(locations) {
+export function stationGeoDataQuery(locations) {
   const input = locations.split(",");
   let stations = "";
   input.forEach((station) => {
