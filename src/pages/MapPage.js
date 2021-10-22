@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback,useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GoogleMap, useJsApiLoader, Polyline, Marker } from "@react-google-maps/api";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
@@ -51,15 +51,17 @@ export default function MapPage() {
   });
   const [map, setMap] = useState(null);
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
     setMap(map);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = useCallback(function callback(map) {
     setMap(null);
   }, []);
+
+  console.log(map)
 
   useEffect(() => {
     async function getMapData() {
@@ -71,12 +73,15 @@ export default function MapPage() {
 
       // Get geodata for locations
       const geodata = await fetchJsonResponse(stationGeoDataQuery(locationString));
+      // Get geodata for train
       const trainStatus = await fetchJsonResponse(trainStatusQuery(trainIdent, today));
       const trainLocation = await fetchJsonResponse(
         stationGeoDataQuery(trainStatus?.TrainAnnouncement[0]?.LocationSignature)
       );
       const trainPosition = convertWgs84(trainLocation?.TrainStation[0]?.Geometry?.WGS84);
+
       setTrainMarker(trainPosition);
+      // Center map on train position
       setMapCenter(trainPosition);
       setMapZoom(5)
       let output = [];
