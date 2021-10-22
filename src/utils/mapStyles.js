@@ -1,4 +1,4 @@
-const darkMap = [
+export const darkMap = [
   {
     featureType: "all",
     elementType: "labels.text.fill",
@@ -166,7 +166,7 @@ const darkMap = [
   },
 ];
 
-const lightMap = [
+export const lightMap = [
   {
     featureType: "water",
     elementType: "geometry",

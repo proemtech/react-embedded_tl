@@ -1,7 +1,7 @@
 export function stationGeoDataQuery(locations) {
-  const input = locations.split(",");
+  const input = locations?.split(",");
   let stations = "";
-  input.forEach((station) => {
+  input?.forEach((station) => {
     stations += `<EQ name="LocationSignature" value="${station}" />\n`;
   });
 
