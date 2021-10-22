@@ -1,6 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import MapPage from "./pages/MapPage";
 import StationPage from "./pages/StationPage";
 import TrainMessagePage from "./pages/TrainMessagePage";
 import TrainPage from "./pages/TrainPage";
@@ -27,6 +28,9 @@ export default function App() {
           </Route>
           <Route exact path="/msg/:locationId?">
             <TrainMessagePage />
+          </Route>
+          <Route exact path="/map/:trainIdent">
+            <MapPage />
           </Route>
         </Switch>
       </Router>
