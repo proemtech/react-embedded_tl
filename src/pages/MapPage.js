@@ -144,7 +144,7 @@ export default function MapPage() {
     }
   }, [sseUrl, trainIdent]);
 
-  //console.log(map);
+  console.log(map);
 
   return isLoaded ? (
     <div>
