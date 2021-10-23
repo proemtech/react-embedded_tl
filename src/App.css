@@ -120,6 +120,14 @@ tbody > tr:nth-child(even) {
   padding: 10px;
 }
 
+.infoWindow {
+  color: #222222;
+}
+
+infoWindow > button {
+  display: none !important;
+}
+
 .lastUpdateText {
   font-size: calc(8px + 1vmin);
   margin: 10px auto 50px;

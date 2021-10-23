@@ -1,17 +1,22 @@
-import React, { useCallback,useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { GoogleMap, useJsApiLoader, Polyline, Marker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Polyline, InfoWindow } from "@react-google-maps/api";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { getLocationsForTrainQuery } from "../services/queries/getLocationsForTrainQuery";
 import { stationGeoDataQuery } from "../services/queries/stationGeoDataQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { convertWgs84, getDateFormat } from "../utils/common";
 import { darkMap } from "../utils/mapStyles";
+import Clock from "../components/Clock";
 
 // Map settings
 const containerStyle = {
   width: "100vw",
   height: "100vh",
+};
+
+const infoWindowOptions = {
+  styles: darkMap,
 };
 
 const mapOptions = {
@@ -44,7 +49,9 @@ export default function MapPage() {
   });
   const [mapZoom, setMapZoom] = useState(5);
   const [pathCoordinates, setPathCoordinates] = useState([]);
+  const [sseUrl, setSseUrl] = useState(null);
   const [trainMarker, setTrainMarker] = useState(null);
+  const [trainStatusData, setTrainStatusData] = useState({});
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -61,9 +68,10 @@ export default function MapPage() {
     setMap(null);
   }, []);
 
-  console.log(map)
-
   useEffect(() => {
+    // Prepare eventsource for later use
+    let eventSource;
+    // Fetch data
     async function getMapData() {
       // Get locations for train ident
       const today = getDateFormat(new Date());
@@ -75,15 +83,21 @@ export default function MapPage() {
       const geodata = await fetchJsonResponse(stationGeoDataQuery(locationString));
       // Get geodata for train
       const trainStatus = await fetchJsonResponse(trainStatusQuery(trainIdent, today));
+      setTrainStatusData(trainStatus?.TrainAnnouncement[0]);
       const trainLocation = await fetchJsonResponse(
         stationGeoDataQuery(trainStatus?.TrainAnnouncement[0]?.LocationSignature)
       );
       const trainPosition = convertWgs84(trainLocation?.TrainStation[0]?.Geometry?.WGS84);
-
+      // Set up streaming data if null
+      if (sseUrl === null) {
+        console.log(`Updated at ${new Date().toLocaleTimeString()}`);
+        setSseUrl(trainStatus?.INFO?.SSEURL);
+      }
+      // Set point of train
       setTrainMarker(trainPosition);
       // Center map on train position
       setMapCenter(trainPosition);
-      setMapZoom(5)
+      setMapZoom(5);
       let output = [];
       geodata?.TrainStation?.map((data) => {
         // Converting POINT string to latitude/longitude
@@ -108,10 +122,34 @@ export default function MapPage() {
     } catch (error) {
       console.error(error);
     }
-  }, [trainIdent]);
+
+    if (sseUrl) {
+      // Set event source
+      eventSource = new EventSource(sseUrl);
+
+      // Handle error
+      eventSource.onerror = (error) => {
+        console.error(error);
+        // TODO: Add some kind of error display
+      };
+
+      // Message on stream open
+      eventSource.onopen = () => console.log(`Stream open at ${new Date().toLocaleTimeString()}`);
+
+      // Message handler
+      eventSource.onmessage = () => {
+        console.log(`Stream ping at ${new Date().toLocaleTimeString()}`);
+        getMapData();
+      };
+    }
+  }, [sseUrl, trainIdent]);
+
+  //console.log(map);
 
   return isLoaded ? (
     <div>
+      <Clock styles={{ zIndex: 99 }} />
+
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={mapCenter}
@@ -121,7 +159,18 @@ export default function MapPage() {
         onUnmount={onUnmount}
       >
         <Polyline path={pathCoordinates} options={polylineOptions} />
-        {trainMarker && <Marker position={trainMarker} />}
+        {trainMarker && (
+          <InfoWindow options={infoWindowOptions} position={trainMarker}>
+            <div className="infoWindow">
+              <h1>Tåg {trainIdent}</h1>
+              {trainStatusData && (
+                <>
+                <p>{trainStatusData.ActivityType === "Ankom" ? ("Ankom") : ("Avgick")} {trainStatusData.LocationSignature} {new Date(trainStatusData.TimeAtLocationWithSeconds).toLocaleTimeString()}</p>
+                </>
+              )}
+            </div>
+          </InfoWindow>
+        )}
       </GoogleMap>
     </div>
   ) : (
