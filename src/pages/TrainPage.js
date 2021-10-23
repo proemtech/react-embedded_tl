@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Clock from "../components/Clock";
 import Help from "../components/Help";
 import LastUpdateInfo from "../components/LastUpdateInfo";
@@ -123,26 +123,35 @@ export default function TrainPage() {
         </div>
       </div>
       <div className="content">
-          {trainSchedule !== null && (
-            <div className="trainInfo">
-              <small>
-                {trainSchedule[0]?.DepartureData?.FromLocationName?.AdvertisedLocationName} -{" "}
-                {trainSchedule[0]?.DepartureData?.ToLocationName?.AdvertisedLocationName}
-              </small>
-              <br />
-              <small>
-                {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description}
-                {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() !== trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
-                  <>
-                    {" "}({trainSchedule[0]?.DepartureData?.InformationOwner}, {trainSchedule[0]?.DepartureData?.Operator})
-                  </>
-                )}
-                {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() === trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
-                  <>{" "}({trainSchedule[0]?.DepartureData.Operator})</>
-                )}
-              </small>
-            </div>
-          )}
+        {trainSchedule !== null && (
+          <div className="trainInfo">
+            <small>
+              {trainSchedule[0]?.DepartureData?.FromLocationName?.AdvertisedLocationName} -{" "}
+              {trainSchedule[0]?.DepartureData?.ToLocationName?.AdvertisedLocationName}
+            </small>
+            <br />
+            <small>
+              {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description}
+              {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() !==
+                trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
+                <>
+                  {" "}
+                  ({trainSchedule[0]?.DepartureData?.InformationOwner}, {trainSchedule[0]?.DepartureData?.Operator})
+                </>
+              )}
+              {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() ===
+                trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
+                <> ({trainSchedule[0]?.DepartureData.Operator})</>
+              )}
+            </small>
+            <br />
+            <small>
+          <Link to={`/map/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`}>
+            Visa tåg {trainIdent} p&aring; kartan.
+          </Link>
+        </small>
+          </div>
+        )}
       </div>
       <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
       <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
