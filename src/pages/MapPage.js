@@ -152,7 +152,7 @@ export default function MapPage() {
         getMapData();
       };
     }
-  }, [sseUrl, trainIdent]);
+  }, [searchDate, sseUrl, trainIdent]);
 
   console.log(map);
 
@@ -213,7 +213,7 @@ export default function MapPage() {
                   <p>
                     <b>
                       {trainStatusData?.activity === "Ankomst" ? "Ankom" : "Avgick"} {trainStatusData?.locationName}{" "}
-                      {trainStatusData?.minutes < 0 ? trainStatusData?.minutes : (`+${trainStatusData?.minutes}`)}
+                      {trainStatusData?.minutes < 0 ? trainStatusData?.minutes : `+${trainStatusData?.minutes}`}
                     </b>
                     <br />
                     kl. {new Date(trainStatusData?.timeAtLocation).toLocaleTimeString()}
