@@ -29,7 +29,7 @@ export default function App() {
           <Route exact path="/msg/:locationId?">
             <TrainMessagePage />
           </Route>
-          <Route exact path="/map/:trainIdent">
+          <Route exact path="/map/:trainIdent/:searchDate?">
             <MapPage />
           </Route>
         </Switch>

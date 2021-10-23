@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { GoogleMap, useJsApiLoader, Polyline, InfoWindow } from "@react-google-maps/api";
+import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { getLocationsForTrainQuery } from "../services/queries/getLocationsForTrainQuery";
+import { getTrainStationName } from "../services/getTrainStationName";
 import { stationGeoDataQuery } from "../services/queries/stationGeoDataQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { convertWgs84, getDateFormat } from "../utils/common";
@@ -40,7 +42,7 @@ const polylineOptions = {
 };
 
 export default function MapPage() {
-  const { trainIdent } = useParams();
+  const { trainIdent, searchDate } = useParams();
   // Sveriges geografiska mittpunkt
 
   const [mapCenter, setMapCenter] = useState({
@@ -82,16 +84,24 @@ export default function MapPage() {
       // Get geodata for locations
       const geodata = await fetchJsonResponse(stationGeoDataQuery(locationString));
       // Get geodata for train
-      const trainStatus = await fetchJsonResponse(trainStatusQuery(trainIdent, today));
-      setTrainStatusData(trainStatus?.TrainAnnouncement[0]);
+      const trainStatusResponse = await fetchJsonResponse(
+        trainStatusQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
+      );
+      const status = await Promise.all(
+        trainStatusResponse?.TrainAnnouncement?.map(async (item) => {
+          item.LocationName = await getTrainStationName(item.LocationSignature);
+          return item;
+        })
+      );
+      setTrainStatusData(await calcTrainStatus(status[0]));
       const trainLocation = await fetchJsonResponse(
-        stationGeoDataQuery(trainStatus?.TrainAnnouncement[0]?.LocationSignature)
+        stationGeoDataQuery(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature)
       );
       const trainPosition = convertWgs84(trainLocation?.TrainStation[0]?.Geometry?.WGS84);
       // Set up streaming data if null
       if (sseUrl === null) {
         console.log(`Updated at ${new Date().toLocaleTimeString()}`);
-        setSseUrl(trainStatus?.INFO?.SSEURL);
+        setSseUrl(trainStatusResponse?.INFO?.SSEURL);
       }
       // Set point of train
       setTrainMarker(trainPosition);
@@ -148,7 +158,9 @@ export default function MapPage() {
 
   return isLoaded ? (
     <div>
-      <Clock styles={{ zIndex: 99 }} />
+      <div className="mapWindowHeader">
+        <Clock />
+      </div>
 
       <GoogleMap
         mapContainerStyle={containerStyle}
@@ -162,10 +174,50 @@ export default function MapPage() {
         {trainMarker && (
           <InfoWindow options={infoWindowOptions} position={trainMarker}>
             <div className="infoWindow">
-              <h1>Tåg {trainIdent}</h1>
+              <h3>
+                {trainStatusData?.isDelayed ? (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="infoWindowIcon"
+                      viewBox="0 0 20 20"
+                      fill={trainStatusData?.textColor}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 0 3 3 0 014.242 0 1 1 0 001.415-1.415 5 5 0 00-7.072 0 1 1 0 000 1.415z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="infoWindowIcon"
+                      viewBox="0 0 20 20"
+                      fill={trainStatusData?.textColor}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </>
+                )}
+                Tåg {trainIdent}
+              </h3>
               {trainStatusData && (
                 <>
-                <p>{trainStatusData.ActivityType === "Ankom" ? ("Ankom") : ("Avgick")} {trainStatusData.LocationSignature} {new Date(trainStatusData.TimeAtLocationWithSeconds).toLocaleTimeString()}</p>
+                  <p>
+                    <b>
+                      {trainStatusData?.activity === "Ankomst" ? "Ankom" : "Avgick"} {trainStatusData?.locationName}{" "}
+                      {trainStatusData?.minutes < 0 ? trainStatusData?.minutes : (`+${trainStatusData?.minutes}`)}
+                    </b>
+                    <br />
+                    kl. {new Date(trainStatusData?.timeAtLocation).toLocaleTimeString()}
+                  </p>
                 </>
               )}
             </div>

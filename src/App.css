@@ -101,6 +101,15 @@ tbody > tr:nth-child(even) {
   font-size: calc(100px + 1vmin);
 }
 
+// InfoWindow close button
+.gm-style-iw + div {
+  display: none;
+}
+
+.gm-ui-hover-effect {
+  display: none !important;
+}
+
 .half {
   width: 50%;
 }
@@ -122,10 +131,20 @@ tbody > tr:nth-child(even) {
 
 .infoWindow {
   color: #222222;
+  font-family: monospace;
 }
 
-infoWindow > button {
-  display: none !important;
+.infoWindow > h3 {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.infoWindowIcon {
+  display: inline;
+  margin-right: 0.275rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 .lastUpdateText {
@@ -142,6 +161,17 @@ infoWindow > button {
 .locationSignature {
   color: rgba(241, 241, 241, 0.25);
   font-size: calc(8px + 0.5vmin);
+}
+
+.mapWindowHeader {
+  background: rgba(34, 34, 34, 0.95);
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  z-index: 99;
 }
 
 .pageTitle {
@@ -272,7 +302,7 @@ infoWindow > button {
   animation-delay: 0.8s;
 }
 .loading-dot:nth-child(5) {
-  animation-delay: 1.0s;
+  animation-delay: 1s;
 }
 .loading-dot:nth-child(6) {
   animation-delay: 1.2s;
@@ -287,13 +317,13 @@ infoWindow > button {
   animation-delay: 1.8s;
 }
 .loading-dot:nth-child(10) {
-  animation-delay: 2.0s;
+  animation-delay: 2s;
 }
 
 @keyframes loading {
   0%,
   100% {
-    background-color: rgb(225,225,225);
+    background-color: rgb(225, 225, 225);
     height: 0.5rem;
   }
   20% {
@@ -303,7 +333,7 @@ infoWindow > button {
     height: 0.5rem;
   }
   50% {
-    background-color: rgb(175,175,175);
+    background-color: rgb(175, 175, 175);
     height: 0.5rem;
   }
   70% {
