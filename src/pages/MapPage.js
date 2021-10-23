@@ -76,8 +76,9 @@ export default function MapPage() {
     // Fetch data
     async function getMapData() {
       // Get locations for train ident
-      const today = getDateFormat(new Date());
-      const trainLocations = await fetchJsonResponse(getLocationsForTrainQuery(trainIdent, today));
+      const trainLocations = await fetchJsonResponse(
+        getLocationsForTrainQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
+      );
       const locationString = trainLocations?.INFO?.EVALRESULT[0]?.OrderedLocations;
       console.log(`${trainIdent}: ${locationString.split(",").join(", ")}`);
 
