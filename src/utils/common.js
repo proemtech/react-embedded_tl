@@ -40,6 +40,7 @@ export function getLongDateFormat(dateTimeString) {
   return new Intl.DateTimeFormat("sv-SE", fullDateTimeOptions).format(new Date(dateTimeString));
 }
 
+// Converting POINT string to latitude/longitude
 export function convertWgs84(input) {
   if (input !== undefined) {
     const point = input?.split(" ");

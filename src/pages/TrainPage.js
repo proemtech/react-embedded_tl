@@ -7,6 +7,7 @@ import TrainScheduleTable from "../components/TrainScheduleTable";
 import TrainStatus from "../components/TrainStatus";
 import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
+import { getTrainStationGeoData } from "../services/getTrainStationGeoData";
 import { getTrainStationName } from "../services/getTrainStationName";
 import { trainScheduleQuery } from "../services/queries/trainScheduleQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
@@ -41,14 +42,17 @@ export default function TrainPage() {
       // Fetch names
       const schedule = await Promise.all(
         trainScheduleResponse?.TrainAnnouncement?.map(async (item) => {
-          // Fetching full names
+          // Fetching full names and location
           const fromLocation = (await getTrainStationName(item?.FromLocation[0]?.LocationName)) ?? null;
+          const geoData = (await getTrainStationGeoData(item?.LocationSignature)) ?? null;
           const toLocation = (await getTrainStationName(item?.ToLocation[0]?.LocationName)) ?? null;
           const station = await getTrainStationName(item?.LocationSignature);
           // Insert full names and output item
           item.FromLocationName = fromLocation;
+          item.GeoData = geoData?.properties;
           item.ToLocationName = toLocation;
           item.LocationName = station;
+          console.log(item)
           return item;
         })
       );

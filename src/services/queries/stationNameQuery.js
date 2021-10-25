@@ -7,6 +7,7 @@ export const stationNameQuery = (locationId) => `
         </FILTER>
         <INCLUDE>Advertised</INCLUDE>
         <INCLUDE>AdvertisedLocationName</INCLUDE>
+        <INCLUDE>Geometry.WGS84</INCLUDE>
         <INCLUDE>LocationSignature</INCLUDE>
         <INCLUDE>OfficialLocationName</INCLUDE>
     </QUERY>

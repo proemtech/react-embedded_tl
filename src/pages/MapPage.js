@@ -22,6 +22,11 @@ const infoWindowOptions = {
   styles: darkMap,
 };
 
+const mapDefaultCenter = {
+  lat: 62.3875,
+  lng: 16.325556,
+};
+
 const mapOptions = {
   styles: darkMap,
   disableDefaultUI: true,
@@ -46,10 +51,7 @@ export default function MapPage() {
   const { trainIdent, searchDate } = useParams();
   // Sveriges geografiska mittpunkt
 
-  const [mapCenter, setMapCenter] = useState({
-    lat: 62.3875,
-    lng: 16.325556,
-  });
+  const [mapCenter, setMapCenter] = useState(mapDefaultCenter);
   const [mapZoom, setMapZoom] = useState(5);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [sseUrl, setSseUrl] = useState(null);
@@ -92,6 +94,7 @@ export default function MapPage() {
       const status = await Promise.all(
         trainStatusResponse?.TrainAnnouncement?.map(async (item) => {
           item.LocationName = await getTrainStationName(item.LocationSignature);
+          console.log(item)
           return item;
         })
       );
@@ -112,16 +115,13 @@ export default function MapPage() {
       setMapZoom(5);
       let output = [];
       geodata?.TrainStation?.map((data) => {
-        // Converting POINT string to latitude/longitude
-        const point = data?.Geometry?.WGS84.split(" ");
-        const lng = parseFloat(point[1].substring(1));
-        const lat = parseFloat(point[2]);
+       const position = convertWgs84(data?.Geometry?.WGS84)
 
         const geo = {
           locationName: data?.AdvertisedLocationName,
           locationSignature: data?.LocationSignature,
-          lat: lat,
-          lng: lng,
+          lat: position.lat,
+          lng: position.lng,
         };
         output.push(geo);
         return null;
