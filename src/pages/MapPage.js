@@ -1,7 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { GoogleMap, useJsApiLoader, Polyline, InfoWindow } from "@react-google-maps/api";
+import "leaflet/dist/leaflet.css";
+//import { GoogleMap, useJsApiLoader, Polyline, InfoWindow } from "@react-google-maps/api";
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
 import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { getLocationsForTrainQuery } from "../services/queries/getLocationsForTrainQuery";
@@ -9,24 +11,21 @@ import { getTrainStationName } from "../services/getTrainStationName";
 import { stationGeoDataQuery } from "../services/queries/stationGeoDataQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { convertWgs84, getDateFormat } from "../utils/common";
-import { darkMap } from "../utils/mapStyles";
 import Clock from "../components/Clock";
 
 // Map settings
-const containerStyle = {
-  width: "100vw",
-  height: "100vh",
-};
-
+/*
 const infoWindowOptions = {
   styles: darkMap,
 };
+*/
 
 const mapDefaultCenter = {
   lat: 62.3875,
   lng: 16.325556,
 };
 
+/*
 const mapOptions = {
   styles: darkMap,
   disableDefaultUI: true,
@@ -46,21 +45,23 @@ const polylineOptions = {
   radius: 30000,
   zIndex: 1,
 };
+*/
 
 export default function MapPage() {
   const { trainIdent, searchDate } = useParams();
-  // Sveriges geografiska mittpunkt
-
   const [mapCenter, setMapCenter] = useState(mapDefaultCenter);
-  const [mapZoom, setMapZoom] = useState(5);
+  const [mapZoom, setMapZoom] = useState(8);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [sseUrl, setSseUrl] = useState(null);
   const [trainMarker, setTrainMarker] = useState(null);
-  const [trainStatusData, setTrainStatusData] = useState({});
-  const { isLoaded } = useJsApiLoader({
+  const [trainStatus, setTrainStatus] = useState({});
+
+  console.log(pathCoordinates);
+  /* const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  });
+  }); */
+  /*
   const [map, setMap] = useState(null);
 
   const onLoad = useCallback(function callback(map) {
@@ -72,6 +73,7 @@ export default function MapPage() {
   const onUnmount = useCallback(function callback(map) {
     setMap(null);
   }, []);
+  */
 
   useEffect(() => {
     // Prepare eventsource for later use
@@ -94,11 +96,10 @@ export default function MapPage() {
       const status = await Promise.all(
         trainStatusResponse?.TrainAnnouncement?.map(async (item) => {
           item.LocationName = await getTrainStationName(item.LocationSignature);
-          console.log(item)
           return item;
         })
       );
-      setTrainStatusData(await calcTrainStatus(status[0]));
+      setTrainStatus(await calcTrainStatus(status[0]));
       const trainLocation = await fetchJsonResponse(
         stationGeoDataQuery(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature)
       );
@@ -115,7 +116,7 @@ export default function MapPage() {
       setMapZoom(5);
       let output = [];
       geodata?.TrainStation?.map((data) => {
-       const position = convertWgs84(data?.Geometry?.WGS84)
+        const position = convertWgs84(data?.Geometry?.WGS84);
 
         const geo = {
           locationName: data?.AdvertisedLocationName,
@@ -156,9 +157,69 @@ export default function MapPage() {
     }
   }, [searchDate, sseUrl, trainIdent]);
 
-  console.log(map);
+  // Set doc title
+  if (trainStatus?.activity !== undefined) {
+    document.title = `Tåg ${trainIdent}: ${trainStatus.activity === "Ankomst" ? "*" : ""}${trainStatus.location} ${
+      trainStatus.prefix
+    }${trainStatus.minutes}`;
+  } else {
+    document.title = `Tåg ${trainIdent}`;
+  }
 
-  return isLoaded ? (
+  return trainMarker ? (
+    <>
+      <MapContainer center={[mapCenter.lat, mapCenter.lng]} zoom={mapZoom} scrollWheelZoom={true} zoomControl={false}>
+        <div className="mapWindowHeader">
+          <div className="half">
+            <h3>
+              <Link
+                to={`/train/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`}
+                className="locationId"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mapWindowHeaderIcon"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                Tillbaka till tidtabell {trainIdent}
+              </Link>
+            </h3>
+          </div>
+          <div className="half">
+            <Clock />
+          </div>
+        </div>
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Polyline positions={pathCoordinates} />
+        <Marker position={[trainMarker.lat, trainMarker.lng]}>
+          <Popup>
+            <p>
+              <b>
+                {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"} {trainStatus?.locationName}{" "}
+                {trainStatus?.minutes < 0 ? trainStatus?.minutes : `+${trainStatus?.minutes}`}
+              </b>
+              <br />
+              kl. {new Date(trainStatus?.timeAtLocation).toLocaleTimeString()}
+            </p>
+          </Popup>
+        </Marker>
+      </MapContainer>
+    </>
+  ) : (
+    <></>
+  );
+
+  /* return isLoaded ? (
     <div>
       <div className="content mapWindowHeader">
         <div className="half">
@@ -198,13 +259,13 @@ export default function MapPage() {
           <InfoWindow options={infoWindowOptions} position={trainMarker}>
             <div className="infoWindow">
               <h3>
-                {trainStatusData?.isDelayed ? (
+                {trainStatus?.isDelayed ? (
                   <>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="infoWindowIcon"
                       viewBox="0 0 20 20"
-                      fill={trainStatusData?.textColor}
+                      fill={trainStatus?.textColor}
                     >
                       <path
                         fillRule="evenodd"
@@ -219,7 +280,7 @@ export default function MapPage() {
                       xmlns="http://www.w3.org/2000/svg"
                       className="infoWindowIcon"
                       viewBox="0 0 20 20"
-                      fill={trainStatusData?.textColor}
+                      fill={trainStatus?.textColor}
                     >
                       <path
                         fillRule="evenodd"
@@ -231,15 +292,15 @@ export default function MapPage() {
                 )}
                 Tåg {trainIdent}
               </h3>
-              {trainStatusData && (
+              {trainStatus && (
                 <>
                   <p>
                     <b>
-                      {trainStatusData?.activity === "Ankomst" ? "Ankom" : "Avgick"} {trainStatusData?.locationName}{" "}
-                      {trainStatusData?.minutes < 0 ? trainStatusData?.minutes : `+${trainStatusData?.minutes}`}
+                      {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"} {trainStatus?.locationName}{" "}
+                      {trainStatus?.minutes < 0 ? trainStatus?.minutes : `+${trainStatus?.minutes}`}
                     </b>
                     <br />
-                    kl. {new Date(trainStatusData?.timeAtLocation).toLocaleTimeString()}
+                    kl. {new Date(trainStatus?.timeAtLocation).toLocaleTimeString()}
                   </p>
                 </>
               )}
@@ -250,5 +311,5 @@ export default function MapPage() {
     </div>
   ) : (
     <></>
-  );
+  ); */
 }
