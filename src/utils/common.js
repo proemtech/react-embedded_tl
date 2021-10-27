@@ -46,7 +46,7 @@ export function convertWgs84(input) {
     const point = input?.split(" ");
     const lng = parseFloat(point[1].substring(1));
     const lat = parseFloat(point[2]);
-  
+
     return { lat: lat, lng: lng };
   }
   return null;
@@ -54,7 +54,24 @@ export function convertWgs84(input) {
 
 // Getting middle of two lat/lng points
 export function getMiddlePoint(fromLatLng, toLatLng) {
-  const middleLat = ((fromLatLng.lat + toLatLng.lat) / 2);
-  const middleLng = ((fromLatLng.lng + toLatLng.lng) / 2);
-  return {lat: middleLat, lng: middleLng};
+  const middleLat = (fromLatLng.lat + toLatLng.lat) / 2;
+  const middleLng = (fromLatLng.lng + toLatLng.lng) / 2;
+  return { lat: middleLat, lng: middleLng };
+}
+
+// Calculating distance in meters
+// Source: https://www.movable-type.co.uk/scripts/latlong.html
+export function getDistance(fromLatLng, toLatLng) {
+  const R = 6371e3; // metres
+  const fi1 = (fromLatLng.lat * Math.PI) / 180; // fi, lambda in radians
+  const fi2 = (toLatLng.lat * Math.PI) / 180;
+  const deltaFi = ((toLatLng.lat - fromLatLng.lat) * Math.PI) / 180;
+  const deltaLambda = ((toLatLng.lng - fromLatLng.lng) * Math.PI) / 180;
+
+  const a = Math.sin(deltaFi / 2) * Math.sin(deltaFi / 2) + Math.cos(fi1) * Math.cos(fi2) * Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = R * c; // in metres
+
+  console.log(d);
 }
