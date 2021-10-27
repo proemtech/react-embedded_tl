@@ -40,6 +40,7 @@ export function getLongDateFormat(dateTimeString) {
   return new Intl.DateTimeFormat("sv-SE", fullDateTimeOptions).format(new Date(dateTimeString));
 }
 
+// Converting POINT string to latitude/longitude
 export function convertWgs84(input) {
   if (input !== undefined) {
     const point = input?.split(" ");
@@ -49,4 +50,11 @@ export function convertWgs84(input) {
     return { lat: lat, lng: lng };
   }
   return null;
+}
+
+// Getting middle of two lat/lng points
+export function getMiddlePoint(fromLatLng, toLatLng) {
+  const middleLat = ((fromLatLng.lat + toLatLng.lat) / 2);
+  const middleLng = ((fromLatLng.lng + toLatLng.lng) / 2);
+  return {lat: middleLat, lng: middleLng};
 }

@@ -48,6 +48,12 @@ export default function TrainMessagePage() {
         getMessages();
       };
     }
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+        console.log("Stream closed.");
+      }
+    };
   }, [locationId, messageStreamUrl]);
 
   // Set doc title

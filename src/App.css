@@ -152,6 +152,12 @@ tbody > tr:nth-child(even) {
   margin: 10px auto 50px;
 }
 
+.leaflet-container {
+  width: 100wh; 
+  height: 100vh;
+  z-index: 1;
+}
+
 .locationId {
   color: #f1f1f1;
   display: flex;
@@ -167,7 +173,7 @@ tbody > tr:nth-child(even) {
 }
 
 .mapWindowHeader {
-  //background: rgba(34, 34, 34, 0.05);
+  background: rgba(34, 34, 34, 0.85);
   position: absolute;
   top: 0;
   right: 0;
