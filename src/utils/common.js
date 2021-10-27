@@ -51,3 +51,10 @@ export function convertWgs84(input) {
   }
   return null;
 }
+
+// Getting middle of two lat/lng points
+export function getMiddlePoint(fromLatLng, toLatLng) {
+  const middleLat = ((fromLatLng.lat + toLatLng.lat) / 2);
+  const middleLng = ((fromLatLng.lng + toLatLng.lng) / 2);
+  return {lat: middleLat, lng: middleLng};
+}

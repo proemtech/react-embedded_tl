@@ -52,7 +52,6 @@ export default function TrainPage() {
           item.GeoData = geoData?.properties;
           item.ToLocationName = toLocation;
           item.LocationName = station;
-          console.log(item)
           return item;
         })
       );
@@ -103,7 +102,12 @@ export default function TrainPage() {
       };
     }
 
-    return () => {};
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+        console.log("Stream closed.");
+      }
+    };
   }, [trainIdent, searchDate, trainStatusStreamUrl]);
 
   // Set doc title
@@ -150,10 +154,10 @@ export default function TrainPage() {
             </small>
             <br />
             <small>
-          <Link to={`/map/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`}>
-            Visa tåg {trainIdent} p&aring; kartan.
-          </Link>
-        </small>
+              <Link to={`/map/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`}>
+                Visa tåg {trainIdent} p&aring; kartan.
+              </Link>
+            </small>
           </div>
         )}
       </div>

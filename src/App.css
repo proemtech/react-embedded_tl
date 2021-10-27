@@ -173,7 +173,7 @@ tbody > tr:nth-child(even) {
 }
 
 .mapWindowHeader {
-  background: rgba(34, 34, 34, 0.75);
+  background: rgba(34, 34, 34, 0.85);
   position: absolute;
   top: 0;
   right: 0;
