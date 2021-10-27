@@ -23,72 +23,28 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png").default,
 });
 
-// Map settings
-/*
-const infoWindowOptions = {
-  styles: darkMap,
-};
-*/
-
+// Set default map center
 const mapDefaultCenter = {
   lat: 62.3875,
   lng: 16.325556,
 };
 
-/*
-const mapOptions = {
-  styles: darkMap,
-  disableDefaultUI: true,
-  zoomControl: true,
-};
+const mapDefaultZoom = 6;
 
-const polylineOptions = {
-  strokeColor: "#FFFFFF",
-  strokeOpacity: 0.8,
-  strokeWeight: 3,
-  fillColor: "#FFFFFF",
-  fillOpacity: 0.35,
-  clickable: false,
-  draggable: false,
-  editable: false,
-  visible: true,
-  radius: 30000,
-  zIndex: 1,
-};
-*/
-
+// Page
 export default function MapPage() {
   const { trainIdent, searchDate } = useParams();
   const [map, setMap] = useState(null);
-  const [mapCenter, setMapCenter] = useState(mapDefaultCenter);
-  const [mapZoom, setMapZoom] = useState(9);
+  const [mapCenter, setMapCenter] = useState(null);
+  const [mapZoom, setMapZoom] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [sseUrl, setSseUrl] = useState(null);
   const [trainMarker, setTrainMarker] = useState(null);
   const [trainStatus, setTrainStatus] = useState({});
 
-  if (map) {
+  if (map && mapCenter !== null) {
     map.flyTo(mapCenter);
   }
-
-  //console.log(pathCoordinates);
-  /* const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-  }); */
-  /*
-  const [map, setMap] = useState(null);
-
-  const onLoad = useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds();
-    map.fitBounds(bounds);
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback(function callback(map) {
-    setMap(null);
-  }, []);
-  */
 
   useEffect(() => {
     // Prepare eventsource for later use
@@ -101,7 +57,6 @@ export default function MapPage() {
       );
       const locationString = trainLocations?.INFO?.EVALRESULT[0]?.OrderedLocations;
       //console.log(`${trainIdent}: ${locationString.split(",").join(", ")}`);
-
       // Get geodata for locations
       const geodata = await fetchJsonResponse(stationGeoDataQuery(locationString));
       // Get geodata for train
@@ -114,6 +69,7 @@ export default function MapPage() {
           return item;
         })
       );
+
       setTrainStatus(await calcTrainStatus(status[0]));
       const trainLocation = await fetchJsonResponse(
         stationGeoDataQuery(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature)
@@ -144,11 +100,13 @@ export default function MapPage() {
         setTrainMarker(halflingLatLng);
       }
       // Center map on train position
-      const startLatLng = convertWgs84(geodata.TrainStation[0].Geometry.WGS84);
-      const endLatLng = convertWgs84(geodata.TrainStation[geodata.TrainStation.length - 1].Geometry.WGS84);
-      const centerLatLng = getMiddlePoint(startLatLng, endLatLng);
-      setMapCenter(centerLatLng);
-      setMapZoom(8);
+      const startLatLng = convertWgs84(geodata?.TrainStation[0]?.Geometry?.WGS84);
+      const endLatLng = convertWgs84(geodata?.TrainStation[geodata.TrainStation?.length - 1].Geometry.WGS84);
+      if (startLatLng && endLatLng) {
+        const centerLatLng = getMiddlePoint(startLatLng, endLatLng);
+        setMapCenter(centerLatLng);
+        setMapZoom(4);
+      }
 
       // Set path coordinates
       let output = [];
@@ -209,7 +167,7 @@ export default function MapPage() {
     document.title = `Tåg ${trainIdent}`;
   }
 
-  return trainMarker ? (
+  return pathCoordinates ? (
     <div>
       <div className="content mapWindowHeader">
         <div className="half">
@@ -236,65 +194,100 @@ export default function MapPage() {
         </div>
       </div>
       <div className="map">
-        <MapContainer center={mapCenter} zoom={mapZoom} scrollWheelZoom={true} zoomControl={false} whenCreated={setMap}>
+        <MapContainer
+          center={mapCenter ? mapCenter : mapDefaultCenter}
+          zoom={mapZoom ? mapZoom : mapDefaultZoom}
+          scrollWheelZoom={true}
+          zoomControl={false}
+          onZoomEnd={(e) => console.log(e)}
+          whenCreated={setMap}
+        >
           <TileLayer
             attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery &copy; <a href="https://www.mapbox.com/">Mapbox</a>'
             url="https://api.mapbox.com/styles/v1/jewenson/ckv9juidr69jm15nz4hhtx232/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiamV3ZW5zb24iLCJhIjoiY2tidGp3Y2xmMGFyNDJybGNuZGZqZW1uNyJ9.yXdCo-Spk2F-YSSbmCKCBg"
           />
-          <Polyline positions={pathCoordinates} />
-          <Marker position={trainMarker}>
-            <Popup>
-              <div className="infoWindow">
-                <h3>
-                  {trainStatus?.isDelayed ? (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="infoWindowIcon"
-                        viewBox="0 0 20 20"
-                        fill={trainStatus?.textColor}
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 0 3 3 0 014.242 0 1 1 0 001.415-1.415 5 5 0 00-7.072 0 1 1 0 000 1.415z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="infoWindowIcon"
-                        viewBox="0 0 20 20"
-                        fill={trainStatus?.textColor}
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </>
-                  )}
-                  Tåg {trainIdent}
-                </h3>
-                <p>
-                  <b>
-                    {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"} {trainStatus?.locationName}{" "}
-                    {trainStatus?.minutes < 0 ? trainStatus?.minutes : `+${trainStatus?.minutes}`}
-                  </b>
-                  <br />
-                  kl. {new Date(trainStatus?.timeAtLocation).toLocaleTimeString()}
-                </p>
-              </div>
-            </Popup>
-          </Marker>
+          <Polyline positions={pathCoordinates} color={"white"} />
+          {trainMarker && (
+            <Marker position={trainMarker}>
+              <Popup>
+                <div className="infoWindow">
+                  <h3>
+                    {trainStatus?.isDelayed ? (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="infoWindowIcon"
+                          viewBox="0 0 20 20"
+                          fill={trainStatus?.textColor}
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-7.536 5.879a1 1 0 001.415 0 3 3 0 014.242 0 1 1 0 001.415-1.415 5 5 0 00-7.072 0 1 1 0 000 1.415z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="infoWindowIcon"
+                          viewBox="0 0 20 20"
+                          fill={trainStatus?.textColor}
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </>
+                    )}
+                    Tåg {trainIdent}
+                  </h3>
+                  <p>
+                    <b>
+                      {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"}{" "}
+                      <Link to={`/station/${trainStatus?.location}`}>{trainStatus?.locationName}</Link>{" "}
+                      {trainStatus?.minutes < 0 ? trainStatus?.minutes : `+${trainStatus?.minutes}`}
+                    </b>
+                    <br />
+                    kl. {new Date(trainStatus?.timeAtLocation).toLocaleTimeString()}
+                  </p>
+                </div>
+              </Popup>
+            </Marker>
+          )}
         </MapContainer>
       </div>
     </div>
   ) : (
-    <></>
+    <>
+      <div className="content mapWindowHeader">
+        <div className="half">
+          <h3>
+            <Link to={`/train/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`} className="locationId">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="mapWindowHeaderIcon"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Tillbaka till tidtabell {trainIdent}
+            </Link>
+          </h3>
+        </div>
+        <div className="half">
+          <Clock />
+        </div>
+      </div>
+    </>
   );
 
   /* return isLoaded ? (

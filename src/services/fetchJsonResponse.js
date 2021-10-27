@@ -7,18 +7,20 @@ import { apiCaller } from "./apiCaller";
  */
 
 export async function fetchJsonResponse(query) {
-  try {
-    const result = await apiCaller(query);
-    if (result.ok) {
-      const json = await result.json();
-      return json.RESPONSE.RESULT[0];
-      //const message = json.RESPONSE.RESULT[0].ERROR?.MESSAGE;
-      //console.error(message);
+  if (query) {
+    try {
+      const result = await apiCaller(query);
+      if (result.ok) {
+        const json = await result.json();
+        return json.RESPONSE.RESULT[0];
+        //const message = json.RESPONSE.RESULT[0].ERROR?.MESSAGE;
+        //console.error(message);
+      }
+      if (!result.ok) console.error(`HTTP status code: ${result.status}`);
+      return;
+    } catch (error) {
+      console.error(error);
     }
-    if (!result.ok) console.error(`HTTP status code: ${result.status}`)
-    return;
-  } catch (error) {
-    console.error(error);
   }
   return;
 }
