@@ -85,6 +85,7 @@ export default function MapPage() {
 
       if (trainStatusResponse?.TrainAnnouncement[0]?.ActivityType === "Ankomst") {
         setTrainMarker(trainPosition);
+        setMapCenter(trainPosition);
       }
       if (trainStatusResponse?.TrainAnnouncement[0]?.ActivityType === "Avgang") {
         //console.log(`Avgång ${trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature}`);
