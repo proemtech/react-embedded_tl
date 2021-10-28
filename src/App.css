@@ -134,7 +134,7 @@ tbody > tr:nth-child(even) {
   font-family: monospace;
 }
 
-.infoWindow > h3 {
+.infoWindow > h3, h4 {
   display: flex;
   align-items: center;
   justify-content: flex-start;
