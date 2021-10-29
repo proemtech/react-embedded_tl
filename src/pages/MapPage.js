@@ -257,12 +257,10 @@ export default function MapPage() {
                     </h4>
                     <span>
                       <b>
-                        {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"}{" "}
-                        <Link to={`/station/${trainStatus?.location}`}>{trainStatus?.locationName}</Link>{" "}
+                        {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"}&nbsp;
+                        {trainStatus?.locationName}&nbsp;
                         {trainStatus?.minutes < 0 ? trainStatus?.minutes : `+${trainStatus?.minutes}`}
                       </b>
-                      <br />
-                      kl. {new Date(trainStatus?.timeAtLocation).toLocaleTimeString()}
                     </span>
                   </div>
                 </Tooltip>

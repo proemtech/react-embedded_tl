@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { getDateFormat, getShortTime } from "../utils/common";
+import DeviationTextSwitcher from "./DeviationTextSwitcher";
 
 export default function StationBoard({ locationId, data, type }) {
   if (data !== null) {
@@ -66,11 +67,9 @@ export default function StationBoard({ locationId, data, type }) {
                   {row.Canceled ? (
                     <div>{row.Canceled ? "Inställt" : ""}</div>
                   ) : (
-                    <div style={row.TrainStatus ? { color: row.TrainStatus.textColor } : null}>
-                      {row.TrainStatus.activity === "Ankomst" ? "*" : ""}
-                      {row.TrainStatus.locationName !== undefined && row.TrainStatus.locationName !== null ? row.TrainStatus.locationName : row.TrainStatus.location} {row.TrainStatus.prefix}
-                      {row.TrainStatus.minutes}
-                    </div>
+                    <>
+                    <DeviationTextSwitcher deviations={row.Deviation} estimatedTimeAtLocation={row.EstimatedTimeAtLocation} trainStatus={row.TrainStatus} trainIdent={row.AdvertisedTrainIdent} />
+                    </>
                   )}
                 </td>
               </tr>
