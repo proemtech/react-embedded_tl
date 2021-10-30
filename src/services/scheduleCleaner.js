@@ -8,6 +8,7 @@ export async function scheduleCleaner(data) {
   let output = [];
   
   // Iterera input och placera i object
+  // TODO: Check further into deviations handling
   let ts;
   for (let i in data) {
     if (previousLocation !== data[i].LocationSignature) {
@@ -34,6 +35,7 @@ export async function scheduleCleaner(data) {
         }
       }
       data[i]?.Deviation?.forEach((deviation) => {
+        console.log(data[i].LocationSignature,data[i].ActivityType, deviation)
         if (deviation?.Code === "ANA027") {
           if (data[i]?.ActivityType === "Ankomst") deviations.add("Inställd ankomst");
           if (data[i]?.ActivityType === "Avgang") deviations.add("Inställd avgång");
@@ -47,6 +49,15 @@ export async function scheduleCleaner(data) {
       let deviations = new Set();
       ts.AdvertisedTrainIdent = data[i].AdvertisedTrainIdent;
       ts.LocationSignature = data[i].LocationSignature;
+      data[i]?.Deviation?.forEach((deviation) => {
+        if (deviation?.Code === "ANA027") {
+          if (data[i]?.ActivityType === "Ankomst") deviations.add("Inställd ankomst");
+          if (data[i]?.ActivityType === "Avgang") deviations.add("Inställd avgång");
+        } else {
+          deviations.add(deviation?.Description)
+        }
+      });
+      ts.Deviations = deviations;
       if (data[i].FromLocation || data[i].ToLocation) {
         ts.FromLocation = data[i].FromLocation[0].LocationName;
         ts.ToLocation = data[i].ToLocation[0].LocationName;
@@ -59,15 +70,6 @@ export async function scheduleCleaner(data) {
         }
         continue;
       }
-      data[i]?.Deviation?.forEach((deviation) => {
-        if (deviation?.Code === "ANA027") {
-          if (data[i]?.ActivityType === "Ankomst") deviations.add("Inställd ankomst");
-          if (data[i]?.ActivityType === "Avgang") deviations.add("Inställd avgång");
-        } else {
-          deviations.add(deviation?.Description)
-        }
-      });
-      ts.Deviations = deviations;
       output.push(ts);
     }
   }

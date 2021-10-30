@@ -109,7 +109,7 @@ export default function TrainScheduleTable({ trainSchedule }) {
                 </div>
               </td>
               <td className="scheduleInfo">
-                {Array.from(row.Deviations).map((deviation) => (
+                {Array.from(row?.Deviations).map((deviation) => (
                   <div key={Math.random()}>{deviation}</div>
                 ))}
               </td>

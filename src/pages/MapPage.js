@@ -8,7 +8,6 @@ import { calcTrainStatus } from "../services/calcTrainStatus";
 import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { getLocationsForTrainQuery } from "../services/queries/getLocationsForTrainQuery";
 import { getTrainStationName } from "../services/getTrainStationName";
-import { stationGeoDataQuery } from "../services/queries/stationGeoDataQuery";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
 import { convertWgs84, getDateFormat, getMiddlePoint } from "../utils/common";
 import Clock from "../components/Clock";
@@ -50,6 +49,19 @@ export default function MapPage() {
   useEffect(() => {
     // Prepare eventsource for later use
     let eventSource;
+
+    // Get station geodata
+    async function getStationGeoData(locationString) {
+      let output = [];
+      const locations = locationString.split(",");
+      locations.forEach(async (location) => {
+        const station = await getTrainStationName(location);
+        output.push(station);
+      });
+
+      return output;
+    }
+
     // Fetch data
     async function getMapData() {
       // Get locations for train ident
@@ -57,9 +69,9 @@ export default function MapPage() {
         getLocationsForTrainQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
       );
       const locationString = trainLocations?.INFO?.EVALRESULT[0]?.OrderedLocations;
-      //console.log(`${trainIdent}: ${locationString.split(",").join(", ")}`);
       // Get geodata for locations
-      const geodata = await fetchJsonResponse(stationGeoDataQuery(locationString));
+      //const geodata = await fetchJsonResponse(stationGeoDataQuery(locationString));
+      const geodata = await getStationGeoData(locationString);
       // Get geodata for train
       const trainStatusResponse = await fetchJsonResponse(
         trainStatusQuery(trainIdent, searchDate !== undefined ? searchDate : getDateFormat(new Date()))
@@ -72,10 +84,8 @@ export default function MapPage() {
       );
 
       setTrainStatus(await calcTrainStatus(status[0]));
-      const trainLocation = await fetchJsonResponse(
-        stationGeoDataQuery(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature)
-      );
-      const trainPosition = convertWgs84(trainLocation?.TrainStation[0]?.Geometry?.WGS84);
+      const trainLocation = await getStationGeoData(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature);
+      const trainPosition = convertWgs84(trainLocation[0]?.Geometry?.WGS84);
       // Set up streaming data if null
       if (sseUrl === null) {
         console.log(`Updated at ${new Date().toLocaleTimeString()}`);
@@ -90,23 +100,23 @@ export default function MapPage() {
       if (trainStatusResponse?.TrainAnnouncement[0]?.ActivityType === "Avgang") {
         //console.log(`Avgång ${trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature}`);
         // Get index of current position
-        const index = geodata.TrainStation.findIndex(
+        const index = geodata?.findIndex(
           (x) => x.LocationSignature === trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature
         );
-        const currentLatLng = convertWgs84(geodata.TrainStation[index].Geometry.WGS84);
-        const nextLatLng = convertWgs84(geodata.TrainStation[index + 1].Geometry.WGS84);
+        const currentLatLng = convertWgs84(geodata[index].Geometry.WGS84);
+        const nextLatLng = convertWgs84(geodata[index + 1].Geometry.WGS84);
         const halflingLatLng = getMiddlePoint(currentLatLng, nextLatLng);
         //console.log(currentLatLng, nextLatLng, halflingLatLng)
         //console.log(`${trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature} is at index ${index}`);
-        //console.log(`Next is ${geodata.TrainStation[index + 1].LocationSignature}`);
+        //console.log(`Next is ${geodata[index + 1].LocationSignature}`);
         setTrainMarker(halflingLatLng);
         if (!isInitialRender) {
           setMapCenter(halflingLatLng);
         }
       }
       // Center map on train position
-      const startLatLng = convertWgs84(geodata?.TrainStation[0]?.Geometry?.WGS84);
-      const endLatLng = convertWgs84(geodata?.TrainStation[geodata.TrainStation?.length - 1].Geometry.WGS84);
+      const startLatLng = convertWgs84(geodata[0]?.Geometry?.WGS84);
+      const endLatLng = convertWgs84(geodata[geodata?.length - 1].Geometry.WGS84);
       if (startLatLng && endLatLng) {
         const centerLatLng = getMiddlePoint(startLatLng, endLatLng);
         if (isInitialRender) {
@@ -118,7 +128,7 @@ export default function MapPage() {
 
       // Set path coordinates
       let output = [];
-      geodata?.TrainStation?.map((data) => {
+      geodata?.map((data) => {
         const position = convertWgs84(data?.Geometry?.WGS84);
 
         const geo = {
