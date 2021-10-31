@@ -5,10 +5,9 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { getShortTime } from "../utils/common";
 
-export default function DeviationTextSwitcher({ deviations, estimatedTimeAtLocation, trainStatus, trainIdent }) {
+export default function DeviationTextSwitcher({ deviations, estimatedTimeAtLocation, trainStatus }) {
   const [index, setIndex] = useState(0)
   const [statusText, setStatusText] = useState("")
-  //console.log(deviations, estimatedTimeAtLocation, trainStatus);
   
   const textLoop = useMemo(() => {
     let output = [];
@@ -21,10 +20,6 @@ export default function DeviationTextSwitcher({ deviations, estimatedTimeAtLocat
     return output;
   }, [deviations, estimatedTimeAtLocation])
 
-
-  //if (textLoop.length > 0) console.log(trainIdent, textLoop);
-
-  
   const shuffle = useCallback(() => {
     if (textLoop.length === 1) {
       setStatusText(textLoop[index])
