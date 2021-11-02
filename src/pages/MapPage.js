@@ -52,14 +52,17 @@ export default function MapPage() {
 
     // Get station geodata
     async function getStationGeoData(locationString) {
-      let output = [];
-      const locations = locationString.split(",");
-      locations.forEach(async (location) => {
-        const station = await getTrainStationName(location);
-        output.push(station);
-      });
-
-      return output;
+      const locations = locationString?.split(",");
+      console.log(locations)
+      if (locations !== undefined) {
+        let output = [];
+        locations.forEach(async (location) => {
+          const station = await getTrainStationName(location);
+          output.push(station);
+        });
+        return output;
+      }
+      return null;
     }
 
     // Fetch data
@@ -85,7 +88,9 @@ export default function MapPage() {
 
       setTrainStatus(await calcTrainStatus(status[0]));
       const trainLocation = await getStationGeoData(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature);
-      const trainPosition = convertWgs84(trainLocation[0]?.Geometry?.WGS84);
+      console.log(trainLocation)
+      // TODO: Fix alternate location here.
+      const trainPosition = trainLocation !== null ? convertWgs84(trainLocation[0]?.Geometry?.WGS84) : {lat:0.0,lng:0.0};
       // Set up streaming data if null
       if (sseUrl === null) {
         console.log(`Updated at ${new Date().toLocaleTimeString()}`);
