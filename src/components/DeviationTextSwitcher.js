@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useMemo } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { getShortTime } from "../utils/common";
+//import { getShortTime } from "../utils/common";
 
 export default function DeviationTextSwitcher({ deviations, estimatedTimeAtLocation, trainStatus }) {
   const [index, setIndex] = useState(0);
@@ -18,7 +18,7 @@ export default function DeviationTextSwitcher({ deviations, estimatedTimeAtLocat
 
     //if (estimatedTimeAtLocation) output.push(`Ny tid: ${getShortTime(estimatedTimeAtLocation)}`);
     return output;
-  }, [deviations, estimatedTimeAtLocation]);
+  }, [deviations]);
 
   const shuffle = useCallback(() => {
     if (textLoop.length === 1) {
