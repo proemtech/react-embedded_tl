@@ -58,19 +58,23 @@ export default function StationBoard({ locationId, data, type }) {
                   </td>
                 )}
                 <td className="stationBoardTimeAtLocation">
-                  <div style={row.Canceled ? { textDecoration: "line-through" } : {}}>
+                  <div style={row.Canceled || row.EstimatedTimeAtLocation ? { textDecoration: "line-through" } : {}}>
                     {getShortTime(row.AdvertisedTimeAtLocation)}
                   </div>
+                  {row.EstimatedTimeAtLocation && (
+                    <div>
+                      <em>{getShortTime(row.EstimatedTimeAtLocation)} (!)</em>
+                    </div>
+                  )}
                 </td>
                 <td className="stationBoardTrackAtLocation">{row.TrackAtLocation}</td>
                 <td className="stationBoardInfo">
-                  {row.Canceled ? (
-                    <div>{row.Canceled ? "Inställt" : ""}</div>
-                  ) : (
-                    <>
-                    <DeviationTextSwitcher deviations={row.Deviation} estimatedTimeAtLocation={row.EstimatedTimeAtLocation} trainStatus={row.TrainStatus} trainIdent={row.AdvertisedTrainIdent} />
-                    </>
-                  )}
+                  <DeviationTextSwitcher
+                    deviations={row.Deviation}
+                    estimatedTimeAtLocation={row.EstimatedTimeAtLocation}
+                    trainStatus={row.TrainStatus}
+                    trainIdent={row.AdvertisedTrainIdent}
+                  />
                 </td>
               </tr>
             ))}
