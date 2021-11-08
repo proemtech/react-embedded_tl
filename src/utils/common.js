@@ -85,5 +85,6 @@ export function getDistance(fromLatLng, toLatLng) {
 
   const d = R * c; // in metres
 
-  console.log(d);
+  //console.log(d);
+  return d;
 }

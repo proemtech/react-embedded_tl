@@ -36,14 +36,19 @@ export default function MapPage() {
   const [isInitialRender, setInitialRender] = useState(true);
   const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
-  const [mapZoom, setMapZoom] = useState(null);
+  const [mapBounds, setMapBounds] = useState(null);
   const [pathCoordinates, setPathCoordinates] = useState([]);
   const [sseUrl, setSseUrl] = useState(null);
   const [trainMarker, setTrainMarker] = useState(null);
   const [trainStatus, setTrainStatus] = useState({});
 
   if (map && mapCenter !== null) {
-    map.flyTo(mapCenter);
+    if (isInitialRender) {
+      map.flyTo(mapCenter);
+      if (mapBounds !== null) {
+        map.fitBounds(mapBounds);
+      }
+    }
   }
 
   useEffect(() => {
@@ -53,7 +58,7 @@ export default function MapPage() {
     // Get station geodata
     async function getStationGeoData(locationString) {
       const locations = locationString?.split(",");
-      console.log(locations)
+      //console.log(locations)
       if (locations !== undefined) {
         let output = [];
         locations.forEach(async (location) => {
@@ -88,9 +93,10 @@ export default function MapPage() {
 
       setTrainStatus(await calcTrainStatus(status[0]));
       const trainLocation = await getStationGeoData(trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature);
-      console.log(trainLocation)
+      //console.log(trainLocation)
       // TODO: Fix alternate location here.
-      const trainPosition = trainLocation !== null ? convertWgs84(trainLocation[0]?.Geometry?.WGS84) : {lat:0.0,lng:0.0};
+      const trainPosition =
+        trainLocation !== null ? convertWgs84(trainLocation[0]?.Geometry?.WGS84) : { lat: 0.0, lng: 0.0 };
       // Set up streaming data if null
       if (sseUrl === null) {
         console.log(`Updated at ${new Date().toLocaleTimeString()}`);
@@ -111,6 +117,7 @@ export default function MapPage() {
         const currentLatLng = convertWgs84(geodata[index].Geometry.WGS84);
         const nextLatLng = convertWgs84(geodata[index + 1].Geometry.WGS84);
         const halflingLatLng = getMiddlePoint(currentLatLng, nextLatLng);
+
         //console.log(currentLatLng, nextLatLng, halflingLatLng)
         //console.log(`${trainStatusResponse?.TrainAnnouncement[0]?.LocationSignature} is at index ${index}`);
         //console.log(`Next is ${geodata[index + 1].LocationSignature}`);
@@ -125,8 +132,10 @@ export default function MapPage() {
       if (startLatLng && endLatLng) {
         const centerLatLng = getMiddlePoint(startLatLng, endLatLng);
         if (isInitialRender) {
+          setMapBounds([startLatLng, endLatLng]);
           setMapCenter(centerLatLng);
-          setMapZoom(4);
+          //const distance = getDistance(startLatLng, endLatLng);
+          //console.log(`Distance from starting point to end point: ${(distance / 1000).toFixed(1)} km`);
           setInitialRender(false);
         }
       }
@@ -219,7 +228,7 @@ export default function MapPage() {
       <div className="map">
         <MapContainer
           center={mapCenter ? mapCenter : mapDefaultCenter}
-          zoom={mapZoom ? mapZoom : mapDefaultZoom}
+          zoom={mapDefaultZoom}
           scrollWheelZoom={true}
           zoomControl={false}
           onZoomEnd={(e) => console.log(e)}
