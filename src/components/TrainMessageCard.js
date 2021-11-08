@@ -1,18 +1,24 @@
 import React from "react";
-import { getLongDateFormat } from "../utils/common";
+import { getShortDateFormat } from "../utils/common";
 
 export default function TrainMessageCard({ msg }) {
   return (
     <div className="trainMessageCard">
-      <h4>{msg.Header}</h4>
-      <small>Starttid: {getLongDateFormat(msg.StartDateTime)}</small>
-      {msg.PrognosticatedEndDateTimeTrafficImpact && (
+      <h4>{msg?.Header}</h4>
+      <small>Starttid: {getShortDateFormat(msg?.StartDateTime)}</small>
+      {msg?.LastUpdateDateTime && (
         <>
           <br />
-          <small>Beräknat klart: {getLongDateFormat(msg.PrognosticatedEndDateTimeTrafficImpact)}</small>
+          <small>Senast uppdaterat: {getShortDateFormat(msg?.LastUpdateDateTime)}</small>
         </>
       )}
-      <p>{msg.ExternalDescription}</p>
+      {msg?.PrognosticatedEndDateTimeTrafficImpact && (
+        <>
+          <br />
+          <small>Beräknat klart: {getShortDateFormat(msg?.PrognosticatedEndDateTimeTrafficImpact)}</small>
+        </>
+      )}
+      <p>{msg?.ExternalDescription}</p>
     </div>
   );
 }

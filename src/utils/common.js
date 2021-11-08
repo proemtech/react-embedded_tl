@@ -13,6 +13,14 @@ export const fullDateTimeOptions = {
   second: "numeric",
 };
 
+export const shortDateTimeOptions = {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+}
+
 export const fullTimeOptions = {
   hour: "numeric",
   minute: "numeric",
@@ -38,6 +46,10 @@ export function getDateFormat(dateTimeString) {
 
 export function getLongDateFormat(dateTimeString) {
   return new Intl.DateTimeFormat("sv-SE", fullDateTimeOptions).format(new Date(dateTimeString));
+}
+
+export function getShortDateFormat(dateTimeString) {
+  return new Intl.DateTimeFormat("sv-SE", shortDateTimeOptions).format(new Date(dateTimeString));
 }
 
 // Converting POINT string to latitude/longitude
