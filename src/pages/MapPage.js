@@ -251,7 +251,6 @@ export default function MapPage() {
               <Marker position={trainMarker}>
                 <Tooltip permanent>
                   <div className="infoWindow">
-                  <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="infoWindowIcon"
@@ -271,7 +270,6 @@ export default function MapPage() {
                         {trainStatus?.locationName}&nbsp;
                         {trainStatus?.minutes < 0 ? trainStatus?.minutes : `+${trainStatus?.minutes}`}
                       </b>
-                    </span>
                   </div>
                 </Tooltip>
                 <Popup>
