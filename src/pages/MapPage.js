@@ -136,8 +136,7 @@ export default function MapPage() {
           setMapCenter(centerLatLng);
           const distance = getDistance(startLatLng, endLatLng);
           const bearing = getBearing(startLatLng, endLatLng);
-          console.log(`Distance from starting point to end point: ${(distance / 1000).toFixed(1)} km`);
-          console.log(`Bearing from starting point to end point: ${bearing.toFixed(0)} deg`);
+          console.log(`From start to end\nDistance: ${(distance / 1000).toFixed(1)} km\nBearing: ${bearing.toFixed(0)} deg`);
           setInitialRender(false);
         }
       }
