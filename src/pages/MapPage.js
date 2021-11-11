@@ -251,7 +251,6 @@ export default function MapPage() {
               <Marker position={trainMarker}>
                 <Tooltip permanent>
                   <div className="infoWindow">
-                    <h4>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="infoWindowIcon"
@@ -265,8 +264,6 @@ export default function MapPage() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      Tåg {trainIdent}
-                    </h4>
                     <span>
                       <b>
                         {trainStatus?.activity === "Ankomst" ? "Ankom" : "Avgick"}&nbsp;
