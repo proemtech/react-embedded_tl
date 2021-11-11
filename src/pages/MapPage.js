@@ -9,7 +9,7 @@ import { fetchJsonResponse } from "../services/fetchJsonResponse";
 import { getLocationsForTrainQuery } from "../services/queries/getLocationsForTrainQuery";
 import { getTrainStationName } from "../services/getTrainStationName";
 import { trainStatusQuery } from "../services/queries/trainStatusQuery";
-import { convertWgs84, getDateFormat, getMiddlePoint } from "../utils/common";
+import { convertWgs84, getBearing, getDateFormat, getDistance, getMiddlePoint } from "../utils/common";
 import Clock from "../components/Clock";
 
 // Leaflet marker icon fix
@@ -134,8 +134,10 @@ export default function MapPage() {
         if (isInitialRender) {
           setMapBounds([startLatLng, endLatLng]);
           setMapCenter(centerLatLng);
-          //const distance = getDistance(startLatLng, endLatLng);
-          //console.log(`Distance from starting point to end point: ${(distance / 1000).toFixed(1)} km`);
+          const distance = getDistance(startLatLng, endLatLng);
+          const bearing = getBearing(startLatLng, endLatLng);
+          console.log(`Distance from starting point to end point: ${(distance / 1000).toFixed(1)} km`);
+          console.log(`Bearing from starting point to end point: ${bearing.toFixed(0)} deg`);
           setInitialRender(false);
         }
       }

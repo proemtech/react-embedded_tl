@@ -88,3 +88,28 @@ export function getDistance(fromLatLng, toLatLng) {
   //console.log(d);
   return d;
 }
+
+// Converts from degrees to radians.
+function toRadians(degrees) {
+  return degrees * Math.PI / 180;
+};
+ 
+// Converts from radians to degrees.
+function toDegrees(radians) {
+  return radians * 180 / Math.PI;
+}
+
+
+export function getBearing(fromLatLng, toLatLng){
+  const startLat = toRadians(fromLatLng.lat);
+  const startLng = toRadians(fromLatLng.lng);
+  const destLat = toRadians(toLatLng.lat);
+  const destLng = toRadians(toLatLng.lng);
+
+  const y = Math.sin(destLng - startLng) * Math.cos(destLat);
+  const x = Math.cos(startLat) * Math.sin(destLat) -
+        Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+  let brng = Math.atan2(y, x);
+  brng = toDegrees(brng);
+  return (brng + 360) % 360;
+}
