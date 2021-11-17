@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Clock() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -14,7 +15,7 @@ export default function Clock() {
 
   return (
     <>
-      <p className="currentTime">{currentTime.toLocaleTimeString()}</p>
+      <p className="currentTime"><Link to="/">{currentTime.toLocaleTimeString()}</Link></p>
     </>
   );
 }
