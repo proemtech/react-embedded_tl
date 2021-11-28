@@ -122,47 +122,59 @@ export default function TrainPage() {
   return (
     <div>
       {errors && <div className="content">{errors}</div>}
-      <div className="content">
-        <div className="half">
-          <h2 className="locationId">Tåg {trainIdent}</h2>
-        </div>
-        <div className="half">
-          <Clock />
-        </div>
-      </div>
-      <div className="content">
-        {trainSchedule !== null && (
-          <div className="trainInfo">
-            <small>
-              {trainSchedule[0]?.DepartureData?.FromLocationName?.AdvertisedLocationName} -{" "}
-              {trainSchedule[0]?.DepartureData?.ToLocationName?.AdvertisedLocationName}
-            </small>
-            <br />
-            <small>
-              {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description}
-              {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() !==
-                trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
-                <>
-                  {" "}
-                  ({trainSchedule[0]?.DepartureData?.InformationOwner}, {trainSchedule[0]?.DepartureData?.Operator})
-                </>
-              )}
-              {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() ===
-                trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
-                <> ({trainSchedule[0]?.DepartureData.Operator})</>
-              )}
-            </small>
-            <br />
-            <small>
-              <Link to={`/map/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`}>
-                Visa tåg {trainIdent} p&aring; kartan.
-              </Link>
-            </small>
+      {trainSchedule?.length === 0 && (
+        <div className="content">
+          <div className="noContentError">
+            <h2 className="locationId">Hittade inga uppgifter om tåg {trainIdent}</h2>
+            <p>
+              <Link to="/">Tillbaka</Link>
+            </p>
           </div>
-        )}
-      </div>
-      <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
-      <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
+        </div>
+      )}
+      {trainSchedule?.length > 0 && (
+        <>
+          <div className="content">
+            <div className="half">
+              <h2 className="locationId">Tåg {trainIdent}</h2>
+            </div>
+            <div className="half">
+              <Clock />
+            </div>
+          </div>
+          <div className="content">
+            <div className="trainInfo">
+              <small>
+                {trainSchedule[0]?.DepartureData?.FromLocationName?.AdvertisedLocationName} -{" "}
+                {trainSchedule[0]?.DepartureData?.ToLocationName?.AdvertisedLocationName}
+              </small>
+              <br />
+              <small>
+                {trainSchedule[0]?.DepartureData?.ProductInformation[0]?.Description}
+                {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() !==
+                  trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
+                  <>
+                    {" "}
+                    ({trainSchedule[0]?.DepartureData?.InformationOwner}, {trainSchedule[0]?.DepartureData?.Operator})
+                  </>
+                )}
+                {trainSchedule[0]?.DepartureData?.InformationOwner?.toLowerCase() ===
+                  trainSchedule[0]?.DepartureData?.Operator?.toLowerCase() && (
+                  <> ({trainSchedule[0]?.DepartureData.Operator})</>
+                )}
+              </small>
+              <br />
+              <small>
+                <Link to={`/map/${trainIdent}${searchDate !== undefined ? `/${searchDate}` : ""}`}>
+                  Visa tåg {trainIdent} p&aring; kartan.
+                </Link>
+              </small>
+            </div>
+          </div>
+          <div className="content">{trainStatus && <TrainStatus trainStatus={trainStatus} />}</div>
+          <div className="content">{trainSchedule && <TrainScheduleTable trainSchedule={trainSchedule} />}</div>
+        </>
+      )}
       <Help />
       {isLoading && (
         <div>

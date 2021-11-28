@@ -190,6 +190,11 @@ tbody > tr:nth-child(even) {
   height: 1.5rem;
 }
 
+.noContentError {
+  margin: 0 auto;
+  text-align: center;
+}
+
 .pageTitle {
   width: auto;
 }
