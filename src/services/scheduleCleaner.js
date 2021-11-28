@@ -35,7 +35,7 @@ export async function scheduleCleaner(data) {
         }
       }
       data[i]?.Deviation?.forEach((deviation) => {
-        console.log(data[i].LocationSignature,data[i].ActivityType, deviation)
+        //console.log(data[i].LocationSignature,data[i].ActivityType, deviation)
         if (deviation?.Code === "ANA027") {
           if (data[i]?.ActivityType === "Ankomst") deviations.add("Inställd ankomst");
           if (data[i]?.ActivityType === "Avgang") deviations.add("Inställd avgång");
