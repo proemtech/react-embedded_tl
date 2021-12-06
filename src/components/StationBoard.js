@@ -32,7 +32,7 @@ export default function StationBoard({ locationId, data, type }) {
                 <td className="stationBoardTrainIdent">
                   <Link to={`/train/${row.AdvertisedTrainIdent}/${getDateFormat(row.ScheduledDepartureDateTime)}`}>
                     {row.AdvertisedTrainIdent}
-                  </Link>
+                  </Link><br />&nbsp;
                 </td>
                 {type === "arrivals" ? (
                   <td title={row.FromLocationName.AdvertisedLocationName} className="stationBoardLocation">
