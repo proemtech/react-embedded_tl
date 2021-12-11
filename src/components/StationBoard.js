@@ -32,7 +32,9 @@ export default function StationBoard({ locationId, data, type }) {
                 <td className="stationBoardTrainIdent">
                   <Link to={`/train/${row.AdvertisedTrainIdent}/${getDateFormat(row.ScheduledDepartureDateTime)}`}>
                     {row.AdvertisedTrainIdent}
-                  </Link><br />&nbsp;
+                  </Link>
+                  <br />
+                  &nbsp;
                 </td>
                 {type === "arrivals" ? (
                   <td title={row.FromLocationName.AdvertisedLocationName} className="stationBoardLocation">
@@ -83,5 +85,20 @@ export default function StationBoard({ locationId, data, type }) {
       </div>
     );
   }
-  return <></>;
+  return (
+    <div>
+      <div className="loading">
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+        <div className="loading-dot"></div>
+      </div>
+    </div>
+  );
 }
