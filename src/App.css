@@ -153,7 +153,7 @@ tbody > tr:nth-child(even) {
 }
 
 .leaflet-container {
-  width: 100wh; 
+  width: 100wh;
   height: 100vh;
   z-index: 1;
 }
@@ -362,5 +362,59 @@ tbody > tr:nth-child(even) {
   }
   90% {
     height: 0.5rem;
+  }
+}
+
+/* Light mode */
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #e7eaed;
+    color: #222222;
+  }
+
+  a {
+    color: #222222;
+  }
+
+  thead > tr {
+    background: #C7C7C7;
+  }
+
+  tbody > tr:nth-child(odd) {
+    background: #E4E4E4;
+  }
+
+  tbody > tr:nth-child(even) {
+    background: #C7C7C7;
+  }
+
+  /* Custom classes */
+  .activityType {
+    color: #2f2f2f;
+  }
+
+  .helpText {
+    color: rgba(14, 14, 14, 0.5);
+  }
+
+  .locationId {
+    color: #2f2f2f;
+  }
+
+  .locationSignature {
+    color: rgba(14,14,14,0.50);
+  }
+
+  .mapWindowHeader {
+    background: rgba(221, 221, 221, 0.85);
+  }
+
+  .trainInfo {
+    color: rgba(14, 14, 14, 0.75);
+  }
+
+  .trainMessageCard {
+    background-color: #C7C7C7;
+    border-radius: 0px;
   }
 }

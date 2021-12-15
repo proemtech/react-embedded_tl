@@ -28,13 +28,14 @@ export default function StationBoard({ locationId, data, type }) {
           </thead>
           <tbody>
             {data?.map((row) => (
+              
               <tr key={Math.random()}>
                 <td className="stationBoardTrainIdent">
                   <Link to={`/train/${row.AdvertisedTrainIdent}/${getDateFormat(row.ScheduledDepartureDateTime)}`}>
                     {row.AdvertisedTrainIdent}
                   </Link>
                   <br />
-                  &nbsp;
+                  <small className="locationSignature">{row.InformationOwner}</small>&nbsp;
                 </td>
                 {type === "arrivals" ? (
                   <td title={row.FromLocationName.AdvertisedLocationName} className="stationBoardLocation">
