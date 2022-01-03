@@ -365,7 +365,7 @@ tbody > tr:nth-child(even) {
   }
 }
 
-// Light mode
+/* Light mode */
 /*
 @media (prefers-color-scheme: light) {
   body {
@@ -389,7 +389,6 @@ tbody > tr:nth-child(even) {
     background: #C7C7C7;
   }
 
-  // Custom classes
   .activityType {
     color: #2f2f2f;
   }
