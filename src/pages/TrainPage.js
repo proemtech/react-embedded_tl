@@ -136,7 +136,7 @@ export default function TrainPage() {
         <>
           <div className="content">
             <div className="half">
-              <h2 className="locationId">Tåg {trainIdent}</h2>
+              <h2 className="locationId">Tåg&nbsp;<span id="trainIdentBox" contentEditable={true} suppressContentEditableWarning={true} spellCheck={false} autoCorrect={"off"}>{trainIdent}</span></h2>
             </div>
             <div className="half">
               <Clock />
