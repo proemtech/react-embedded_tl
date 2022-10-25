@@ -366,6 +366,7 @@ tbody > tr:nth-child(even) {
 }
 
 /* Light mode */
+/*
 @media (prefers-color-scheme: light) {
   body {
     background-color: #e7eaed;
@@ -417,3 +418,5 @@ tbody > tr:nth-child(even) {
     border-radius: 0px;
   }
 }
+*/
+  
