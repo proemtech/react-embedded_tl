@@ -30,13 +30,7 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      "defaults and supports es6-module",
-      "maintained node versions"
-    ],
-    "development": []
-  },
+  "browserslist": "^4.21.3",
   "devDependencies": {
     "@types/leaflet": "^1.7.5"
   }
